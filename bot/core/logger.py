@@ -4,15 +4,18 @@ Module contains `logger` object to interact with bot logs
 
 from logging import FileHandler, StreamHandler, getLogger, basicConfig
 
+from .configuration import LOGGING_FILEMODE, LOGGING_FILENAME, LOGGING_LEVEL, LOGGING_FORMAT, LOGGING_DATETIME_FORMAT
+
 logger = getLogger(__name__)
 basicConfig(
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
+    format=LOGGING_FORMAT,
+    datefmt=LOGGING_DATETIME_FORMAT,
+    level=LOGGING_LEVEL,
     handlers=[
         StreamHandler(),
         FileHandler(
-            filename="",
-            mode="w",
+            filename=LOGGING_FILENAME,
+            mode=LOGGING_FILEMODE,
             encoding="utf-8",
         ),
     ],
