@@ -6,7 +6,7 @@ This is powerful bot for discord.
 
 ### Stacks
 
-- Python3
+- Python3.12
 
 ### Frameworks & Libaries
 
