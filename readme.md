@@ -1,23 +1,21 @@
 # LiveNT Code Bot
 
-This is powerful bot for discord.
+## Технологии
 
-## Technologies
-
-### Stacks
+### Стеки
 
 - Python3.12
 
-### Frameworks & Libaries
+### Фреймворки и библиотеки
 
 - SQLAchemy
 - Disnake
 
-### Other tools
+### Другие инструменты
 
 - Alembic
 - uv
 
-## Authors
+## Авторы
 
-You can also see a [full list of contributors](https://github.com/psevdonimux/LiveNT-Code-Bot/graphs/contributors)
+Вы также можете ознакомиться с [полным списком участников](https://github.com/psevdonimux/LiveNT-Code-Bot/graphs/contributors)
