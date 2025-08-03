@@ -1,6 +1,6 @@
-# Discord Bot ORM Template
+# LiveNT Code Bot
 
-Hello! This template suggests a python bot design with using SQLAlchemy for access to database.
+This is powerful bot for discord.
 
 ## Technologies
 
@@ -18,8 +18,6 @@ Hello! This template suggests a python bot design with using SQLAlchemy for acce
 - Alembic
 - uv
 
-## Author
+## Authors
 
-- [@TheAihopGG](https://github.com/TheAihopGG)
-
-You can also see a [full list of contributors](https://github.com/TheAihopGG/discord_bot_orm_template/graphs/contributors)
+You can also see a [full list of contributors](https://github.com/psevdonimux/LiveNT-Code-Bot/graphs/contributors)
