@@ -18,4 +18,4 @@
 
 ## Авторы
 
-Вы также можете ознакомиться с [полным списком участников](https://github.com/psevdonimux/LiveNT-Code-Bot/graphs/contributors)
+Вы также можете ознакомиться с [полным списком авторов](https://github.com/psevdonimux/LiveNT-Code-Bot/graphs/contributors)
