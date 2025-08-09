@@ -15,7 +15,6 @@ class TimestampEmbed(Embed):
         description=None,
         url=None,
         timestamp=datetime.now(),
-        colour=None,
         color=None,
     ):
         super().__init__(
@@ -24,7 +23,6 @@ class TimestampEmbed(Embed):
             description=description,
             url=url,
             timestamp=timestamp,
-            colour=colour,
             color=color,
         )
 
