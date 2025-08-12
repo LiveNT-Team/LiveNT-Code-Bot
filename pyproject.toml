@@ -1,17 +1,17 @@
 [tool.poetry]
 name = "livent-code-bot"
-package-mode = false
 version = "0.1.0"
 description = ""
 authors = ["theaihopgg <theaihopgg@gmail.com>"]
 readme = "README.md"
-packages = [{include = "livent_code_bot"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"
 sqlalchemy = "^2.0.43"
-alembic = "^1.16.4"
 disnake = "^2.10.1"
+alembic = "^1.16.4"
+python-dotenv = "^1.1.1"
+aiosqlite = "^0.21.0"
 
 
 [build-system]
