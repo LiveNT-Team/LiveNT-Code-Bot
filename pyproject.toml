@@ -1,13 +1,18 @@
-[project]
-name = "discord-bot-orm-template"
+[tool.poetry]
+name = "livent-code-bot"
 version = "0.1.0"
-description = "Add your description here"
+description = ""
+authors = ["theaihopgg <theaihopgg@gmail.com>"]
 readme = "README.md"
-requires-python = ">=3.12"
-dependencies = [
-    "aiosqlite>=0.21.0",
-    "alembic>=1.16.4",
-    "disnake>=2.10.1",
-    "python-dotenv>=1.1.1",
-    "sqlalchemy>=2.0.41",
-]
+packages = [{include = "livent_code_bot"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+sqlalchemy = "^2.0.43"
+alembic = "^1.16.4"
+disnake = "^2.10.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
