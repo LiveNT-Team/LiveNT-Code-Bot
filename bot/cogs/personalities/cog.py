@@ -3,7 +3,9 @@ from disnake import AppCmdInter
 
 from ...core.database import session_factory
 from ...core.configuration import PersonalitiesEnum, PERSONALITIES
+from ...core.embeds import TheCommandDoesNotSupportDMEmbed
 from ...services.users import get_or_create_user
+from .embeds import PersonalitiesListEmbed, PersonalitySetEmbed
 
 
 class PersonalitiesCog(Cog):
@@ -17,11 +19,14 @@ class PersonalitiesCog(Cog):
         pass
 
     # endregion
-    @change.sub_command(name="personality")
+    @change.sub_command(
+        name="personality",
+        description="Изменяет личность ИИ модели. ИИ модель будет отвечать вам с учётом личности",
+    )
     async def set_personality(
         self,
         inter: AppCmdInter,
-        personality_name: PersonalitiesEnum,
+        personality_name: PersonalitiesEnum = Param(description="Название личности"),
     ) -> None:
         if inter.guild:
             async with session_factory() as session:
@@ -32,16 +37,28 @@ class PersonalitiesCog(Cog):
                 )
                 user.current_personality_name = personality_name
                 await session.commit()
-                await inter.response.send_message("SUCCESS")
+                await inter.response.send_message(embed=PersonalitySetEmbed(personality_name=personality_name))
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
-    @get.sub_command(name="personalities")
+    @get.sub_command(
+        name="personalities",
+        description="Выводит список доступных личностей с их описаниями",
+    )
     async def get_personalities(self, inter: AppCmdInter) -> None:
         if inter.guild:
-            await inter.response.send_message("\n".join([f"{key} - {value}" for key, value in PERSONALITIES.items()]))
+            async with session_factory() as session:
+                user = await get_or_create_user(
+                    session,
+                    guild_id=inter.guild.id,
+                    discord_id=inter.author.id,
+                )
+                await inter.response.send_message(
+                    embed=PersonalitiesListEmbed(current_personality_name=user.current_personality_name),
+                    ephemeral=True,
+                )
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
 
 __all__ = ("PersonalitiesCog",)
