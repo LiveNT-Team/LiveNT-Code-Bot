@@ -31,19 +31,5 @@ class StatsCog(Cog):
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
-    @Cog.listener("on_message")
-    async def on_message(self, message: Message) -> None:
-        if message.guild:
-            if not message.author.bot:
-                async with session_factory() as session:
-                    user = await get_or_create_user(
-                        session,
-                        guild_id=message.guild.id,
-                        discord_id=message.author.id,
-                    )
-                    await session.refresh(user)
-                    user.messages_count += 1
-                    await session.commit()
-
 
 __all__ = ("StatsCog",)

@@ -9,3 +9,8 @@ class TheCommandDoesNotSupportDMEmbed(ErrorEmbed):
 class YouCannotMentionBotInsteadMemberEmbed(ErrorEmbed):
     def __init__(self) -> None:
         super().__init__(description="Вы не можете передать бота вместо участника в параметр.")
+
+
+class NotEnoughPermissionsEmbed(ErrorEmbed):
+    def __init__(self) -> None:
+        super().__init__(description="Недостаточно прав для выполнения этой команды")
