@@ -4,6 +4,7 @@ The bot configuration
 You can find full configuration documentation at `./bot/docs/project_configuration.md.`
 """
 
+from enum import StrEnum, auto
 import logging
 from os import getenv
 from typing import Literal, Sequence
@@ -30,3 +31,12 @@ DEV_SQLALCHEMY_URL = f"sqlite+aiosqlite:///./bot/databases/dev_database.db"
 TEST_GUILDS: Sequence[int] = {1401173801689022517}
 
 BOT_TOKEN = getenv("BOT_TOKEN")
+
+
+class PersonalitiesEnum(StrEnum):
+    DEFAULT = auto()
+
+
+PERSONALITIES: dict[PersonalitiesEnum, str] = {
+    PersonalitiesEnum.DEFAULT: "Не используй длинное тире",
+}

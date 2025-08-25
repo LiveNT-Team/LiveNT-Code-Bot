@@ -9,3 +9,7 @@ class User(Base):
     discord_id: Mapped[int] = mapped_column(nullable=False, unique=True)
     guild_id: Mapped[int] = mapped_column(nullable=False)
     messages_count: Mapped[int] = mapped_column(nullable=False, default=0)
+    current_personality_name: Mapped[str] = mapped_column(nullable=False, default="default")
+
+
+__all__ = ("User",)

@@ -1,8 +1,8 @@
-"""Create tables
+"""fix
 
-Revision ID: d45518e8355c
+Revision ID: 192586173db8
 Revises: 
-Create Date: 2025-08-12 19:25:47.763441
+Create Date: 2025-08-25 13:06:19.280815
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'd45518e8355c'
+revision: str = '192586173db8'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -34,9 +34,12 @@ def upgrade() -> None:
     op.create_index(op.f('ix_guilds_settings_id'), 'guilds_settings', ['id'], unique=False)
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('discord_id', sa.Integer(), nullable=False),
     sa.Column('guild_id', sa.Integer(), nullable=False),
     sa.Column('messages_count', sa.Integer(), nullable=False),
-    sa.PrimaryKeyConstraint('id')
+    sa.Column('current_personality_name', sa.String(), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('discord_id')
     )
     op.create_index(op.f('ix_users_id'), 'users', ['id'], unique=False)
     # ### end Alembic commands ###
