@@ -24,7 +24,10 @@ class SettingsCog(Cog):
     # endregion
 
     # region ai commands
-    @enable.sub_command("ai")
+    @enable.sub_command(
+        name="ai",
+        description="Включает ИИ функционал",
+    )
     @has_permissions(administrator=True)
     async def enable_ai(self, inter: AppCmdInter) -> None:
         if inter.guild:
@@ -36,7 +39,10 @@ class SettingsCog(Cog):
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
-    @disable.sub_command("ai")
+    @disable.sub_command(
+        name="ai",
+        description="Выключает ИИ функционал",
+    )
     @has_permissions(administrator=True)
     async def disable_ai(self, inter: AppCmdInter) -> None:
         if inter.guild:
@@ -48,7 +54,10 @@ class SettingsCog(Cog):
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
-    @set.sub_command("ai_channel")
+    @set.sub_command(
+        name="ai_channel",
+        description="Устанавливает канал для общения с ИИ моделью",
+    )
     @has_permissions(administrator=True)
     async def set_ai_channel(
         self,
@@ -67,7 +76,10 @@ class SettingsCog(Cog):
     # endregion
 
     # region greetings commands
-    @enable.sub_command("greetings")
+    @enable.sub_command(
+        name="greetings",
+        description="Включает приветствия для новых пользователей",
+    )
     @has_permissions(administrator=True)
     async def enable_greetings(self, inter: AppCmdInter) -> None:
         if inter.guild:
@@ -79,7 +91,10 @@ class SettingsCog(Cog):
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
-    @disable.sub_command("greetings")
+    @disable.sub_command(
+        name="greetings",
+        description="Выключает приветствия для новых пользователей",
+    )
     @has_permissions(administrator=True)
     async def disable_greetings(self, inter: AppCmdInter) -> None:
         if inter.guild:
@@ -91,7 +106,10 @@ class SettingsCog(Cog):
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
-    @set.sub_command("greetings_channel")
+    @set.sub_command(
+        name="greetings_channel",
+        description="Устанавливает канал для приветствия новых пользователей",
+    )
     @has_permissions(administrator=True)
     async def set_greetings_channel(
         self,
@@ -109,7 +127,10 @@ class SettingsCog(Cog):
 
     # endregion
 
-    @slash_command(name="settings")
+    @slash_command(
+        name="settings",
+        description="Выводит настройки сервера",
+    )
     @has_permissions(administrator=True)
     async def get_settings(self, inter: AppCmdInter) -> None:
         if inter.guild:
