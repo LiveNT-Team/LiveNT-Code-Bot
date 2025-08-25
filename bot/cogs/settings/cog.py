@@ -2,7 +2,9 @@ from disnake.ext.commands import Cog, Param, slash_command, has_permissions
 from disnake import AppCmdInter, TextChannel
 
 from ...core.database import session_factory
+from ...core.embeds import TheCommandDoesNotSupportDMEmbed
 from ...services.guilds_settings import get_guild_settings, get_or_create_guild_settings
+from .embeds import AIChannelSetEmbed, AIDisabledEmbed, AIEnabledEmbed, GreetingsChannelSetEmbed, GreetingsDisabledEmbed, GreetingsEnabledEmbed, SettingsEmbed
 
 
 class SettingsCog(Cog):
@@ -30,9 +32,9 @@ class SettingsCog(Cog):
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
                 guild_settings.is_ai_enabled = True
                 await session.commit()
-                await inter.response.send_message("SUCCESS")
+                await inter.response.send_message(embed=AIEnabledEmbed())
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
     @disable.sub_command("ai")
     @has_permissions(administrator=True)
@@ -42,9 +44,9 @@ class SettingsCog(Cog):
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
                 guild_settings.is_ai_enabled = False
                 await session.commit()
-                await inter.response.send_message("SUCCESS")
+                await inter.response.send_message(embed=AIDisabledEmbed())
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
     @set.sub_command("ai_channel")
     @has_permissions(administrator=True)
@@ -58,9 +60,9 @@ class SettingsCog(Cog):
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
                 guild_settings.ai_channel_id = channel.id
                 await session.commit()
-                await inter.response.send_message("SUCCESS")
+                await inter.response.send_message(embed=AIChannelSetEmbed(channel=channel))
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
     # endregion
 
@@ -73,9 +75,9 @@ class SettingsCog(Cog):
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
                 guild_settings.is_greetings_enabled = True
                 await session.commit()
-                await inter.response.send_message("SUCCESS")
+                await inter.response.send_message(embed=GreetingsEnabledEmbed())
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
     @disable.sub_command("greetings")
     @has_permissions(administrator=True)
@@ -85,9 +87,9 @@ class SettingsCog(Cog):
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
                 guild_settings.is_greetings_enabled = False
                 await session.commit()
-                await inter.response.send_message("SUCCESS")
+                await inter.response.send_message(embed=GreetingsDisabledEmbed())
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
     @set.sub_command("greetings_channel")
     @has_permissions(administrator=True)
@@ -101,9 +103,9 @@ class SettingsCog(Cog):
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
                 guild_settings.greetings_channel_id = channel.id
                 await session.commit()
-                await inter.response.send_message("SUCCESS")
+                await inter.response.send_message(embed=GreetingsChannelSetEmbed(channel=channel))
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
     # endregion
 
@@ -114,10 +116,16 @@ class SettingsCog(Cog):
             async with session_factory() as session:
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
                 await inter.response.send_message(
-                    f"ИИ канал: <#{guild_settings.ai_channel_id}>\nКанал приветствий: <#{guild_settings.greetings_channel_id}>\n{"Приветствия включены" if guild_settings.is_greetings_enabled else "Приветствия выключены"}\n{"ИИ включен" if guild_settings.is_ai_enabled else "ИИ выключен"}"
+                    embed=SettingsEmbed(
+                        greetings_channel_id=guild_settings.greetings_channel_id,
+                        ai_channel_id=guild_settings.ai_channel_id,
+                        is_greetings_enabled=guild_settings.is_greetings_enabled,
+                        is_ai_enabled=guild_settings.is_ai_enabled,
+                    ),
+                    ephemeral=True,
                 )
         else:
-            await inter.response.send_message("ERROR1")
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
 
 __all__ = ("SettingsCog",)
