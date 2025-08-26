@@ -2,7 +2,7 @@ from disnake.ext.commands import Cog, Param, slash_command
 from disnake import AppCmdInter
 
 from ...core.database import session_factory
-from ...core.configuration import PersonalitiesEnum, PERSONALITIES
+from ...core.configuration import PERSONALITIES
 from ...core.embeds import TheCommandDoesNotSupportDMEmbed
 from ...services.users import get_or_create_user
 from .embeds import PersonalitiesListEmbed, PersonalitySetEmbed
@@ -23,10 +23,13 @@ class PersonalitiesCog(Cog):
         name="personality",
         description="Изменяет личность ИИ модели. ИИ модель будет отвечать вам с учётом личности",
     )
-    async def set_personality(
+    async def change_personality(
         self,
         inter: AppCmdInter,
-        personality_name: PersonalitiesEnum = Param(description="Название личности"),
+        personality_name: str = Param(
+            description="Название личности",
+            choices=list(PERSONALITIES.keys()),
+        ),
     ) -> None:
         if inter.guild:
             async with session_factory() as session:

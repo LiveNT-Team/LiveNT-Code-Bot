@@ -7,7 +7,8 @@ from bot.cogs.help import HelpCog
 from bot.cogs.personalities import PersonalitiesCog
 from bot.cogs.settings import SettingsCog
 from bot.cogs.stats import StatsCog
-
+from bot.cogs.events_handler import EventsHandlerCog
+from bot.cogs.ai import AICog
 
 bot = InteractionBot(
     intents=Intents(messages=True),
@@ -21,6 +22,8 @@ bot = InteractionBot(
         PersonalitiesCog(),
         SettingsCog(),
         StatsCog(),
+        EventsHandlerCog(bot=bot),
+        AICog(),
     }
 ]
 

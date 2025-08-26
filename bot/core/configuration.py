@@ -38,50 +38,47 @@ AI_API_URL = getenv("AI_API_URL")
 AI_API_KEY = getenv("AI_API_KEY")
 
 
-class PersonalitiesEnum(StrEnum):
-    ASSISTANT = auto()
-    WARM = auto()
-    IDEAS = auto()
-    CONSULTANT = auto()
-    PROGRAMMER = auto()
-    EXPLORER = auto()
-
-
-PERSONALITIES: dict[PersonalitiesEnum, Personality] = {
-    PersonalitiesEnum.ASSISTANT: Personality(
+PERSONALITIES: dict[str, Personality] = {
+    "assistant": Personality(
         name="Ассистент",
         description="Будь лаконичным и полезным. Только суть.",
         temperature=0.7,
         max_tokens=1000,
     ),
-    PersonalitiesEnum.WARM: Personality(
+    "warm": Personality(
         name="Теплый помощник",
         description="Отвечай тепло и с пониманием. Кратко, но с заботой.",
         temperature=0.8,
         max_tokens=1200,
     ),
-    PersonalitiesEnum.IDEAS: Personality(
+    "ideas": Personality(
         name="Генератор идей",
         description="Думай нестандартно. Предлагай яркие и свежие идеи.",
         temperature=0.9,
         max_tokens=1500,
     ),
-    PersonalitiesEnum.CONSULTANT: Personality(
+    "consultant": Personality(
         name="Консультант",
         description="Будь точным. Отвечай как эксперт, без воды.",
         temperature=0.3,
         max_tokens=800,
     ),
-    PersonalitiesEnum.PROGRAMMER: Personality(
+    "programmer": Personality(
         name="Программист",
         description="Отвечай как опытный разработчик. Четко, по делу, с примерами.",
         temperature=0.4,
         max_tokens=1200,
     ),
-    PersonalitiesEnum.EXPLORER: Personality(
+    "explorer": Personality(
         name="Исследователь",
         description="Исследуй тему глубоко. Задавай уточняющие вопросы. Отвечай с интересом и стремлением к пониманию.",
         temperature=0.7,
         max_tokens=1500,
+    ),
+    "default": Personality(
+        name="Ассистент",
+        description="Будь лаконичным и полезным. Только суть.",
+        temperature=0.7,
+        max_tokens=1000,
     ),
 }

@@ -3,14 +3,14 @@ import base64
 from pathlib import Path
 
 from ...core.configuration import PERSONALITIES, AI_API_KEY, AI_API_URL
+from ...core.typed_dicts import Personality
 
 
 async def send_ai_request(
     text: str,
-    personality_name: str = "assistant",
+    personality: Personality = PERSONALITIES["default"],
     image_path: str | None = None,
 ) -> str | None:
-    personality = PERSONALITIES[personality_name]
     messages = [
         {
             "role": "system",
