@@ -4,12 +4,14 @@ The bot configuration
 You can find full configuration documentation at `./bot/docs/project_configuration.md.`
 """
 
-from enum import StrEnum, auto
 import logging
+from enum import StrEnum, auto
 from os import getenv
 from typing import Literal, Sequence
 from pathlib import Path
 from dotenv import load_dotenv
+
+from .typed_dicts import Personality
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -32,11 +34,54 @@ TEST_GUILDS: Sequence[int] = {1401173801689022517}
 
 BOT_TOKEN = getenv("BOT_TOKEN")
 
+AI_API_URL = getenv("AI_API_URL")
+AI_API_KEY = getenv("AI_API_KEY")
+
 
 class PersonalitiesEnum(StrEnum):
-    DEFAULT = auto()
+    ASSISTANT = auto()
+    WARM = auto()
+    IDEAS = auto()
+    CONSULTANT = auto()
+    PROGRAMMER = auto()
+    EXPLORER = auto()
 
 
-PERSONALITIES: dict[PersonalitiesEnum, str] = {
-    PersonalitiesEnum.DEFAULT: "Не используй длинное тире",
+PERSONALITIES: dict[PersonalitiesEnum, Personality] = {
+    PersonalitiesEnum.ASSISTANT: Personality(
+        name="Ассистент",
+        description="Будь лаконичным и полезным. Только суть.",
+        temperature=0.7,
+        max_tokens=1000,
+    ),
+    PersonalitiesEnum.WARM: Personality(
+        name="Теплый помощник",
+        description="Отвечай тепло и с пониманием. Кратко, но с заботой.",
+        temperature=0.8,
+        max_tokens=1200,
+    ),
+    PersonalitiesEnum.IDEAS: Personality(
+        name="Генератор идей",
+        description="Думай нестандартно. Предлагай яркие и свежие идеи.",
+        temperature=0.9,
+        max_tokens=1500,
+    ),
+    PersonalitiesEnum.CONSULTANT: Personality(
+        name="Консультант",
+        description="Будь точным. Отвечай как эксперт, без воды.",
+        temperature=0.3,
+        max_tokens=800,
+    ),
+    PersonalitiesEnum.PROGRAMMER: Personality(
+        name="Программист",
+        description="Отвечай как опытный разработчик. Четко, по делу, с примерами.",
+        temperature=0.4,
+        max_tokens=1200,
+    ),
+    PersonalitiesEnum.EXPLORER: Personality(
+        name="Исследователь",
+        description="Исследуй тему глубоко. Задавай уточняющие вопросы. Отвечай с интересом и стремлением к пониманию.",
+        temperature=0.7,
+        max_tokens=1500,
+    ),
 }
