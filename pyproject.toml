@@ -12,6 +12,7 @@ disnake = "^2.10.1"
 alembic = "^1.16.4"
 python-dotenv = "^1.1.1"
 aiosqlite = "^0.21.0"
+httpx = "^0.28.1"
 
 
 [build-system]

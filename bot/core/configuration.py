@@ -5,10 +5,13 @@ You can find full configuration documentation at `./bot/docs/project_configurati
 """
 
 import logging
+from enum import StrEnum, auto
 from os import getenv
 from typing import Literal, Sequence
 from pathlib import Path
 from dotenv import load_dotenv
+
+from .typed_dicts import Personality
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -30,3 +33,52 @@ DEV_SQLALCHEMY_URL = f"sqlite+aiosqlite:///./bot/databases/dev_database.db"
 TEST_GUILDS: Sequence[int] = {1401173801689022517}
 
 BOT_TOKEN = getenv("BOT_TOKEN")
+
+AI_API_URL = getenv("AI_API_URL")
+AI_API_KEY = getenv("AI_API_KEY")
+
+
+PERSONALITIES: dict[str, Personality] = {
+    "assistant": Personality(
+        name="Ассистент",
+        description="Будь лаконичным и полезным. Только суть.",
+        temperature=0.7,
+        max_tokens=1000,
+    ),
+    "warm": Personality(
+        name="Теплый помощник",
+        description="Отвечай тепло и с пониманием. Кратко, но с заботой.",
+        temperature=0.8,
+        max_tokens=1200,
+    ),
+    "ideas": Personality(
+        name="Генератор идей",
+        description="Думай нестандартно. Предлагай яркие и свежие идеи.",
+        temperature=0.9,
+        max_tokens=1500,
+    ),
+    "consultant": Personality(
+        name="Консультант",
+        description="Будь точным. Отвечай как эксперт, без воды.",
+        temperature=0.3,
+        max_tokens=800,
+    ),
+    "programmer": Personality(
+        name="Программист",
+        description="Отвечай как опытный разработчик. Четко, по делу, с примерами.",
+        temperature=0.4,
+        max_tokens=1200,
+    ),
+    "explorer": Personality(
+        name="Исследователь",
+        description="Исследуй тему глубоко. Задавай уточняющие вопросы. Отвечай с интересом и стремлением к пониманию.",
+        temperature=0.7,
+        max_tokens=1500,
+    ),
+    "default": Personality(
+        name="Ассистент",
+        description="Будь лаконичным и полезным. Только суть.",
+        temperature=0.7,
+        max_tokens=1000,
+    ),
+}

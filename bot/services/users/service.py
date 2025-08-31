@@ -27,13 +27,17 @@ async def get_or_create_user(
     guild_id: int,
     discord_id: int,
 ) -> User:
-    if guild_settings := await get_user(session, guild_id=guild_id):
-        return guild_settings
+    if user := await get_user(
+        session,
+        guild_id=guild_id,
+        discord_id=discord_id,
+    ):
+        return user
     else:
-        guild_settings = User(guild_id=guild_id, discord_id=discord_id)
-        session.add(guild_settings)
+        user = User(guild_id=guild_id, discord_id=discord_id)
+        session.add(user)
         await session.commit()
-        return guild_settings
+        return user
 
 
 __all__ = (
