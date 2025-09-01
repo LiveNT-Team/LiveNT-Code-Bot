@@ -25,7 +25,12 @@ class StatsCog(Cog):
                         discord_id=member.id,
                     )
                     await session.refresh(user)
-                    await inter.response.send_message(embed=MemberStatsEmbed())
+                    await inter.response.send_message(
+                        embed=MemberStatsEmbed(
+                            member=member,
+                            messages_count=user.messages_count,
+                        )
+                    )
             else:
                 await inter.response.send_message(embed=YouCannotMentionBotInsteadMemberEmbed(), ephemeral=True)
         else:
