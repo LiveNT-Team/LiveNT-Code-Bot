@@ -18,13 +18,15 @@ class AICog(Cog):
         text: String[str, 3, 50],
         personality_name: str | None = Param(default=None, choices=list(PERSONALITIES.keys())),
     ) -> None:
+        await inter.response.defer()
         async with session_factory() as session:
             guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
             if guild_settings.is_ai_enabled:
                 async with inter.channel.typing():
+                    inter.channel.typing()
                     if personality_name:
                         if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[personality_name]):
-                            await inter.response.send_message(
+                            await inter.edit_original_response(
                                 content=ai_response,
                                 allowed_mentions=AllowedMentions(
                                     everyone=False,
@@ -32,7 +34,7 @@ class AICog(Cog):
                                 ),
                             )
                         else:
-                            await inter.response.send_message(embed=AIErrorEmbed(), ephemeral=True)
+                            await inter.edit_original_response(embed=AIErrorEmbed())
                     else:
                         user = await get_or_create_user(
                             session,
@@ -40,7 +42,7 @@ class AICog(Cog):
                             guild_id=inter.guild.id,
                         )
                         if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[user.current_personality_name]):
-                            await inter.response.send_message(
+                            await inter.edit_original_response(
                                 content=ai_response,
                                 allowed_mentions=AllowedMentions(
                                     everyone=False,
@@ -48,7 +50,7 @@ class AICog(Cog):
                                 ),
                             )
                         else:
-                            await inter.response.send_message(embed=AIErrorEmbed(), ephemeral=True)
+                            await inter.edit_original_response(embed=AIErrorEmbed())
 
 
 __all__ = ("AICog",)
