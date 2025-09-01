@@ -6,7 +6,13 @@ class HelpForSectionEmbed(InfoEmbed):
     def __init__(self, section_name: HelpMenuSectionsEnum):
         super().__init__()
         match section_name:
-            case _:
+            case HelpMenuSectionsEnum.AI:
+                ...
+            case HelpMenuSectionsEnum.SETTINGS:
+                ...
+            case HelpMenuSectionsEnum.PERSONALITIES:
+                ...
+            case HelpMenuSectionsEnum.STATS:
                 ...
 
 

@@ -13,9 +13,10 @@ class HelpView(View):
                 min_values=1,
                 max_values=1,
                 options=[
-                    SelectOption(label="Настройка сервера", value=HelpMenuSectionsEnum.GUILD_SETTINGS),
-                    SelectOption(label="Верификация", value=HelpMenuSectionsEnum.VERIFICATION),
-                    SelectOption(label="Общее", value=HelpMenuSectionsEnum.COMMON),
+                    SelectOption(label="Настройка сервера", value=HelpMenuSectionsEnum.SETTINGS),
+                    SelectOption(label="ИИ функционал", value=HelpMenuSectionsEnum.AI),
+                    SelectOption(label="Личности ИИ", value=HelpMenuSectionsEnum.PERSONALITIES),
+                    SelectOption(label="Статистика", value=HelpMenuSectionsEnum.STATS),
                 ],
             )
 
