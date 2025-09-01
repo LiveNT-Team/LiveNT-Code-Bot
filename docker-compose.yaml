@@ -1,0 +1,7 @@
+services:
+  bot:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./
+    volumes:
+      - ./bot/databases:/livent_bot/bot/databases
