@@ -3,6 +3,7 @@ from disnake import AllowedMentions, AppCmdInter, Member, Message
 
 from ...services.guilds_settings import get_or_create_guild_settings
 from ...services.aiu import send_ai_request
+from ...services.prompts import get_greetings_text
 from ...services.users.service import get_or_create_user
 from ...core.database import session_factory
 from ...core.logger import logger
@@ -62,9 +63,12 @@ class EventsHandlerCog(Cog):
 
     @Cog.listener()
     async def on_member_join(self, member: Member) -> None:
-        # TODO: делать запрос к ии и приветствовать участника
-        logger.info("Member joined.")
-        ...
+        greeting_text = await get_greetings_text(member)
+        logger.info(greeting_text)
+        
+        # Отправка в системный канал (если настроен)
+        if member.guild.system_channel:
+            await member.guild.system_channel.send(greeting_text)
 
 
 __all__ = ("EventsHandlerCog",)
