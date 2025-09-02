@@ -1,6 +1,7 @@
 from sqlalchemy.orm import mapped_column, Mapped
 
 from .base import Base
+from ...core.configuration import DEFAULT_PERSONALITY_NAME
 
 
 class User(Base):
@@ -9,7 +10,7 @@ class User(Base):
     discord_id: Mapped[int] = mapped_column(nullable=False, unique=True)
     guild_id: Mapped[int] = mapped_column(nullable=False)
     messages_count: Mapped[int] = mapped_column(nullable=False, default=0)
-    current_personality_name: Mapped[str] = mapped_column(nullable=False, default="default")
+    current_personality_name: Mapped[str] = mapped_column(nullable=False, default=DEFAULT_PERSONALITY_NAME)
 
 
 __all__ = ("User",)

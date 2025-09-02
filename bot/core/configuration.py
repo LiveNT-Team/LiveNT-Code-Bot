@@ -37,7 +37,7 @@ BOT_TOKEN = getenv("BOT_TOKEN")
 AI_API_URL = getenv("AI_API_URL")
 AI_API_KEY = getenv("AI_API_KEY")
 
-
+DEFAULT_PERSONALITY_NAME: str = "assistant"
 PERSONALITIES: dict[str, Personality] = {
     "assistant": Personality(
         name="Ассистент",
@@ -74,11 +74,5 @@ PERSONALITIES: dict[str, Personality] = {
         description="Исследуй тему глубоко. Задавай уточняющие вопросы. Отвечай с интересом и стремлением к пониманию.",
         temperature=0.7,
         max_tokens=1500,
-    ),
-    "default": Personality(
-        name="Ассистент",
-        description="Будь лаконичным и полезным. Только суть.",
-        temperature=0.7,
-        max_tokens=1000,
     ),
 }
