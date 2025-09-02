@@ -10,7 +10,11 @@ from bot.cogs.events_handler import EventsHandlerCog
 from bot.cogs.ai import AICog
 
 bot = InteractionBot(
-    intents=Intents(messages=True),
+    intents=Intents(
+        messages=True,
+        guilds=True,
+        members=True,
+    ),
     test_guilds=TEST_GUILDS,
     command_sync_flags=CommandSyncFlags(
         sync_commands_debug=True,
