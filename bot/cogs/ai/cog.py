@@ -23,7 +23,6 @@ class AICog(Cog):
             guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
             if guild_settings.is_ai_enabled:
                 async with inter.channel.typing():
-                    inter.channel.typing()
                     if personality_name:
                         if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[personality_name]):
                             await inter.edit_original_response(
