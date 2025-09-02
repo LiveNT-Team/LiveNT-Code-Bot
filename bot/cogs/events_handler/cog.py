@@ -28,7 +28,6 @@ class EventsHandlerCog(Cog):
                     await session.refresh(user)
                     user.messages_count += 1
                     await session.commit()
-                    logger.info("Messages received, message counter increased.")
                     guild_settings = await get_or_create_guild_settings(session, guild_id=message.guild.id)
                     await session.refresh(guild_settings)
                     if self.bot.user in message.mentions or message.channel.id == guild_settings.ai_channel_id:
