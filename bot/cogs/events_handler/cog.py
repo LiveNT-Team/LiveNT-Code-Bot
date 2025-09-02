@@ -3,6 +3,7 @@ from disnake import AllowedMentions, AppCmdInter, Member, Message
 
 from ...services.guilds_settings import get_or_create_guild_settings
 from ...services.aiu import send_ai_request
+from ...services.prompts import get_greetings_text
 from ...services.users.service import get_or_create_user
 from ...core.database import session_factory
 from ...core.logger import logger
@@ -27,10 +28,10 @@ class EventsHandlerCog(Cog):
                     await session.refresh(user)
                     user.messages_count += 1
                     await session.commit()
-                    logger.info("Messages received, message counter increased.")
-
-                    if self.bot.user in message.mentions or message.channel.id == guild_settings.ai_channel_id:
-                        guild_settings = await get_or_create_guild_settings(session, guild_id=message.guild.id)
+                    logger.info("Messages received, message counter increased.") 
+                    guild_settings = await get_or_create_guild_settings(session, guild_id=message.guild.id)
+                    await session.refresh(guild_settings)
+                    if self.bot.user in message.mentions or message.channel.id == guild_settings.ai_channel_id:                      
                         if guild_settings.is_ai_enabled:
                             user = await get_or_create_user(
                                 session,
@@ -62,9 +63,7 @@ class EventsHandlerCog(Cog):
 
     @Cog.listener()
     async def on_member_join(self, member: Member) -> None:
-        # TODO: делать запрос к ии и приветствовать участника
-        logger.info("Member joined.")
-        ...
+        logger.info(await get_greetings_text(member))
 
 
 __all__ = ("EventsHandlerCog",)
