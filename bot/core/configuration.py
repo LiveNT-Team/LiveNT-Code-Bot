@@ -30,7 +30,7 @@ LOGGING_DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"
 PROD_SQLALCHEMY_URL = f"sqlite+aiosqlite:///./bot/databases/prod_database.db"
 DEV_SQLALCHEMY_URL = f"sqlite+aiosqlite:///./bot/databases/dev_database.db"
 
-TEST_GUILDS: Sequence[int] = {1401173801689022517}
+TEST_GUILDS: Sequence[int] = {1401173801689022517, 1412036625625514138}
 
 BOT_TOKEN = getenv("BOT_TOKEN")
 

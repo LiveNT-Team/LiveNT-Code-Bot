@@ -1,8 +1,8 @@
 from disnake.ext.commands import Cog, Param, slash_command, String
-from disnake import AppCmdInter, AllowedMentions
+from disnake import AppCmdInter, AllowedMentions, NotFound
 
 
-from .embeds import AIErrorEmbed
+from .embeds import AIErrorEmbed, AIIsDisabledEmbed
 from ...services.aiu import send_ai_request
 from ...services.users import get_or_create_user
 from ...services.guilds_settings import get_or_create_guild_settings
@@ -21,6 +21,7 @@ class AICog(Cog):
         await inter.response.defer()
         async with session_factory() as session:
             guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
+            await session.refresh(guild_settings)
             if guild_settings.is_ai_enabled:
                 async with inter.channel.typing():
                     if personality_name:
@@ -40,6 +41,7 @@ class AICog(Cog):
                             discord_id=inter.author.id,
                             guild_id=inter.guild.id,
                         )
+                        await session.refresh(user)
                         if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[user.current_personality_name]):
                             await inter.edit_original_response(
                                 content=ai_response,
@@ -50,6 +52,9 @@ class AICog(Cog):
                             )
                         else:
                             await inter.edit_original_response(embed=AIErrorEmbed())
+
+            else:
+                await inter.edit_original_response(embed=AIIsDisabledEmbed())
 
 
 __all__ = ("AICog",)
