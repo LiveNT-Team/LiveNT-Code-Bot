@@ -1,5 +1,5 @@
 from disnake.ext.commands import Cog, Param, slash_command, String
-from disnake import AppCmdInter, AllowedMentions, NotFound
+from disnake import AppCmdInter
 
 
 from .embeds import AIErrorEmbed, AIIsDisabledEmbed
@@ -8,6 +8,7 @@ from ...services.users import get_or_create_user
 from ...services.guilds_settings import get_or_create_guild_settings
 from ...core.configuration import PERSONALITIES
 from ...core.database import session_factory
+from ...core.utils import send_long_message
 
 
 class AICog(Cog):
@@ -15,7 +16,7 @@ class AICog(Cog):
     async def ask(
         self,
         inter: AppCmdInter,
-        text: String[str, 3, 50],
+        text: String[str, 3, 200],
         personality_name: str | None = Param(default=None, choices=list(PERSONALITIES.keys())),
     ) -> None:
         await inter.response.defer()
@@ -26,13 +27,7 @@ class AICog(Cog):
                 async with inter.channel.typing():
                     if personality_name:
                         if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[personality_name]):
-                            await inter.edit_original_response(
-                                content=ai_response,
-                                allowed_mentions=AllowedMentions(
-                                    everyone=False,
-                                    users=False,
-                                ),
-                            )
+                            await send_long_message(inter.channel, ai_response)
                         else:
                             await inter.edit_original_response(embed=AIErrorEmbed())
                     else:
@@ -43,13 +38,7 @@ class AICog(Cog):
                         )
                         await session.refresh(user)
                         if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[user.current_personality_name]):
-                            await inter.edit_original_response(
-                                content=ai_response,
-                                allowed_mentions=AllowedMentions(
-                                    everyone=False,
-                                    users=False,
-                                ),
-                            )
+                            await send_long_message(inter.channel, ai_response)
                         else:
                             await inter.edit_original_response(embed=AIErrorEmbed())
 
