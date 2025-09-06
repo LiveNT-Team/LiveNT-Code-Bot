@@ -1,8 +1,8 @@
 """fix
 
-Revision ID: 192586173db8
+Revision ID: ccb6d414a220
 Revises: 
-Create Date: 2025-08-25 13:06:19.280815
+Create Date: 2025-09-06 11:02:45.176055
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '192586173db8'
+revision: str = 'ccb6d414a220'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,8 +26,11 @@ def upgrade() -> None:
     sa.Column('guild_id', sa.Integer(), nullable=False),
     sa.Column('greetings_channel_id', sa.Integer(), nullable=True),
     sa.Column('ai_channel_id', sa.Integer(), nullable=True),
-    sa.Column('is_greetings_enabled', sa.Integer(), nullable=False),
-    sa.Column('is_ai_enabled', sa.Integer(), nullable=False),
+    sa.Column('activist_role_id', sa.Integer(), nullable=True),
+    sa.Column('activist_role_messages_count', sa.Integer(), nullable=True),
+    sa.Column('is_greetings_enabled', sa.Boolean(), nullable=False),
+    sa.Column('is_ai_enabled', sa.Boolean(), nullable=False),
+    sa.Column('is_activist_role_extraditing', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('guild_id')
     )
