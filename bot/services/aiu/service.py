@@ -2,13 +2,13 @@ import httpx
 import base64
 from pathlib import Path
 
-from ...core.configuration import PERSONALITIES, AI_API_KEY, AI_API_URL
+from ...core.configuration import PERSONALITIES, AI_API_KEY, AI_API_URL, DEFAULT_PERSONALITY_NAME
 from ...core.typed_dicts import Personality
 
 
 async def send_ai_request(
     text: str,
-    personality: Personality = PERSONALITIES["default"],
+    personality: Personality = PERSONALITIES[DEFAULT_PERSONALITY_NAME],
     image_path: str | None = None,
 ) -> str | None:
     messages = [
