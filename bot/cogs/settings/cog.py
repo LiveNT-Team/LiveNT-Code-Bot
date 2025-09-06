@@ -146,7 +146,7 @@ class SettingsCog(Cog):
     async def set_activist_role(
         self,
         inter: AppCmdInter,
-        role: Role,
+        role: Role = Param(description="Роль, которая будет установлена как роль активист"),
     ) -> None:
         if inter.guild:
             async with session_factory() as session:
@@ -155,12 +155,15 @@ class SettingsCog(Cog):
                 await session.commit()
                 await inter.response.send_message(embed=ActivistRoleSetEmbed())
 
-    @set.sub_command(name="activist_messages_count")
+    @set.sub_command(
+        name="activist_messages_count",
+        description="Устанавливает количество сообщений, необходимых для получения роли активист",
+    )
     @has_permissions(administrator=True)
     async def set_activist_messages_count(
         self,
         inter: AppCmdInter,
-        count: int,
+        count: int = Param(description="Количество сообщений"),
     ) -> None:
         if inter.guild:
             if count > 0:
@@ -174,6 +177,7 @@ class SettingsCog(Cog):
 
     @enable.sub_command(
         name="extraditing_activist",
+        description="Включает выдачу роли активист",
     )
     @has_permissions(administrator=True)
     async def enable_extraditing_activist(self, inter: AppCmdInter) -> None:
@@ -188,6 +192,7 @@ class SettingsCog(Cog):
 
     @disable.sub_command(
         name="extraditing_activist",
+        description="Выключает выдачу роли активист",
     )
     @has_permissions(administrator=True)
     async def disable_extraditing_activist(self, inter: AppCmdInter) -> None:
