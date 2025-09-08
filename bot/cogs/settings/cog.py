@@ -216,6 +216,7 @@ class SettingsCog(Cog):
         if inter.guild:
             async with session_factory() as session:
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
+                await session.refresh(guild_settings)
                 await inter.response.send_message(
                     embed=SettingsEmbed(
                         greetings_channel_id=guild_settings.greetings_channel_id,

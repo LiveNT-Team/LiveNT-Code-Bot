@@ -19,7 +19,7 @@ ENV_FILENAME = BASE_DIR / ".env"
 
 assert load_dotenv(ENV_FILENAME), f"path ENV_FILENAME is not exists"
 
-IS_DEV_MODE = True
+IS_DEV_MODE = False
 
 LOGGING_FILENAME = BASE_DIR / "bot/logs/logs.log"
 LOGGING_FILEMODE: Literal["w", "a"] = "w"
@@ -27,7 +27,11 @@ LOGGING_LEVEL: Literal[10, 20, 30, 40, 50] = logging.INFO
 LOGGING_FORMAT: str = "%(asctime)s [%(levelname)s] %(message)s"
 LOGGING_DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"
 
-PROD_SQLALCHEMY_URL = f"sqlite+aiosqlite:///./bot/databases/prod_database.db"
+MYSQL_PASSWORD = getenv("MYSQL_PASSWORD")
+MYSQL_USERNAME = getenv("MYSQL_USERNAME")
+MYSQL_HOST = getenv("MYSQL_HOST")
+
+PROD_SQLALCHEMY_URL = f"mysql+aiomysql://{MYSQL_USERNAME}:{MYSQL_PASSWORD}@{MYSQL_HOST}/LCB"
 DEV_SQLALCHEMY_URL = f"sqlite+aiosqlite:///./bot/databases/dev_database.db"
 
 TEST_GUILDS: Sequence[int] = {1401173801689022517, 1412036625625514138}
