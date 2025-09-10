@@ -1,5 +1,5 @@
 from disnake.ext.commands import Cog, Param, slash_command, String, InteractionBot
-from disnake import AppCmdInter, Message
+from disnake import AllowedMentions, AppCmdInter, Message
 
 
 from .embeds import AIErrorEmbed, AIIsDisabledEmbed
@@ -8,7 +8,8 @@ from ...services.users import get_or_create_user
 from ...services.guilds_settings import get_or_create_guild_settings
 from ...core.configuration import PERSONALITIES
 from ...core.database import session_factory
-from ...core.utils import reply_long_message
+from ...core.utils import split_into_chunks
+from ...core.base_embeds import SuccessEmbed
 
 
 class AICog(Cog):
@@ -30,7 +31,15 @@ class AICog(Cog):
             if guild_settings.is_ai_enabled:
                 if personality_name:
                     if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[personality_name]):
-                        await reply_long_message(ai_response, inter=inter)
+                        await inter.edit_original_response(embed=SuccessEmbed())
+                        for chunk in split_into_chunks(ai_response):
+                            await inter.channel.send(
+                                chunk,
+                                allowed_mentions=AllowedMentions(
+                                    users=False,
+                                    everyone=False,
+                                ),
+                            )
                     else:
                         await inter.edit_original_response(embed=AIErrorEmbed())
                 else:
@@ -41,7 +50,15 @@ class AICog(Cog):
                     )
                     await session.refresh(user)
                     if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[user.current_personality_name]):
-                        await reply_long_message(ai_response, inter=inter)
+                        await inter.edit_original_response(embed=SuccessEmbed())
+                        for chunk in split_into_chunks(ai_response):
+                            await inter.channel.send(
+                                chunk,
+                                allowed_mentions=AllowedMentions(
+                                    users=False,
+                                    everyone=False,
+                                ),
+                            )
                     else:
                         await inter.edit_original_response(embed=AIErrorEmbed())
             else:
@@ -61,7 +78,14 @@ class AICog(Cog):
                                 discord_id=message.author.id,
                             )
                             if ai_response := await send_ai_request(text=message.content, personality=PERSONALITIES[user.current_personality_name]):
-                                await reply_long_message(ai_response, message_to_reply=message)
+                                for chunk in split_into_chunks(ai_response):
+                                    await message.channel.send(
+                                        chunk,
+                                        allowed_mentions=AllowedMentions(
+                                            users=False,
+                                            everyone=False,
+                                        ),
+                                    )
                             else:
                                 await message.reply(embed=AIErrorEmbed())
 
