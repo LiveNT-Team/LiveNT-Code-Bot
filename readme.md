@@ -35,3 +35,7 @@
 - [@psevdonimux](https://github.com/psevdonimux)
 
 Вы также можете ознакомиться с [полным списком авторов](https://github.com/psevdonimux/LiveNT-Code-Bot/graphs/contributors)
+
+## Благодарности
+
+- [@bleudev](https://github.com/bleudev) за бейджи для readme
