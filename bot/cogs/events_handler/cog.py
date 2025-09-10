@@ -9,9 +9,6 @@ from ...core.embeds import NotEnoughPermissionsEmbed
 
 
 class EventsHandlerCog(Cog):
-    def __init__(self, bot: InteractionBot) -> None:
-        self.bot = bot
-
     @Cog.listener()
     async def on_slash_command_error(self, inter: AppCmdInter, error: CommandError) -> None:
         if isinstance(error, MissingPermissions):

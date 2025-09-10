@@ -1,4 +1,4 @@
-from disnake.ext.commands import Cog, Param, slash_command, String
+from disnake.ext.commands import Cog, Param, slash_command, String, InteractionBot
 from disnake import AppCmdInter, Message
 
 
@@ -12,6 +12,10 @@ from ...core.utils import reply_long_message
 
 
 class AICog(Cog):
+    def __init__(self, bot: InteractionBot):
+        super().__init__()
+        self.bot = bot
+
     @slash_command()
     async def ask(
         self,

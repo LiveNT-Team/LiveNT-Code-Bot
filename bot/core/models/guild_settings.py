@@ -6,8 +6,12 @@ from .base import Base
 
 class GuildSettings(Base):
     __tablename__ = "guilds_settings"
-    id: Mapped[int] = mapped_column(BIGINT(), primary_key=True, index=True)
-    guild_id: Mapped[int] = mapped_column(BIGINT(), nullable=False, unique=True)
+    guild_id: Mapped[int] = mapped_column(
+        BIGINT(),
+        nullable=False,
+        unique=True,
+        primary_key=True,
+    )
     greetings_channel_id: Mapped[int] = mapped_column(BIGINT(), nullable=True)
     ai_channel_id: Mapped[int] = mapped_column(BIGINT(), nullable=True)
     activist_role_id: Mapped[int] = mapped_column(BIGINT(), nullable=True)
