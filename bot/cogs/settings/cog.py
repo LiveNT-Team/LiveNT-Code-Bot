@@ -251,7 +251,7 @@ class SettingsCog(Cog):
                 guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
                 guild_settings.developer_role_id = role.id
                 await session.commit()
-                await inter.response.send_message(embed=DeveloperRoleSetEmbed())
+                await inter.response.send_message(embed=DeveloperRoleSetEmbed(role=role))
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
@@ -274,6 +274,7 @@ class SettingsCog(Cog):
                             is_activist_role_extraditing=guild_settings.is_activist_role_extraditing,
                             activist_role_id=guild_settings.activist_role_id,
                             activist_role_messages_count=guild_settings.activist_role_messages_count,
+                            developer_role_id=guild_settings.developer_role_id,
                         ),
                         ephemeral=True,
                     )

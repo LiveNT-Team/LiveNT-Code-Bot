@@ -73,10 +73,12 @@ class SettingsEmbed(InfoEmbed):
         is_ai_enabled: bool,
         is_greetings_enabled: bool,
         is_activist_role_extraditing: bool,
+        developer_role_id: int,
     ) -> None:
         super().__init__(description="Настройки бота:")
         self.add_field(name="Канал для приветствий", value=f"<#{greetings_channel_id}>", inline=False)
         self.add_field(name="Роль активиста", value=f"<@&{activist_role_id}>", inline=False)
+        self.add_field(name="Роль разработчика", value=f"<@&{developer_role_id}>", inline=False)
         self.add_field(name="Количество сообщений для получения активиста", value=activist_role_messages_count, inline=False)
         self.add_field(name="Канал для ИИ", value=f"<#{ai_channel_id}>", inline=False)
         self.add_field(name="Приветствия", value="Включен" if is_greetings_enabled else "Выключен", inline=False)
