@@ -1,4 +1,4 @@
-from disnake import TextChannel
+from disnake import Role, TextChannel
 
 from ...core.base_embeds import SuccessEmbed, ErrorEmbed, InfoEmbed
 
@@ -56,6 +56,11 @@ class GreetingsDisabledEmbed(SuccessEmbed):
 class GreetingsChannelSetEmbed(SuccessEmbed):
     def __init__(self, channel: TextChannel) -> None:
         super().__init__(description=f"Установлен новый канал для приветствий: {channel.mention}")
+
+
+class DeveloperRoleSetEmbed(SuccessEmbed):
+    def __init__(self, role: Role) -> None:
+        super().__init__(description=f"Установлена роль для разработчиков сервера: {role.mention}")
 
 
 class SettingsEmbed(InfoEmbed):

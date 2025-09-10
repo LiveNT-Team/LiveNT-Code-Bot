@@ -6,6 +6,7 @@ from .embeds import AIErrorEmbed, AIIsDisabledEmbed
 from ...services.aiu import send_ai_request
 from ...services.users import get_or_create_user
 from ...services.guilds_settings import get_or_create_guild_settings
+from ...core.embeds import TheCommandDoesNotSupportDMEmbed
 from ...core.configuration import PERSONALITIES
 from ...core.database import session_factory
 from ...core.utils import split_into_chunks
@@ -25,44 +26,47 @@ class AICog(Cog):
         personality_name: str | None = Param(default=None, choices=list(PERSONALITIES.keys())),
     ) -> None:
         await inter.response.defer()
-        async with session_factory() as session:
-            guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
-            await session.refresh(guild_settings)
-            if guild_settings.is_ai_enabled:
-                if personality_name:
-                    if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[personality_name]):
-                        await inter.edit_original_response(embed=SuccessEmbed())
-                        for chunk in split_into_chunks(ai_response):
-                            await inter.channel.send(
-                                chunk,
-                                allowed_mentions=AllowedMentions(
-                                    users=False,
-                                    everyone=False,
-                                ),
-                            )
+        if inter.guild:
+            async with session_factory() as session:
+                guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
+                await session.refresh(guild_settings)
+                if guild_settings.is_ai_enabled:
+                    if personality_name:
+                        if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[personality_name]):
+                            await inter.edit_original_response(embed=SuccessEmbed())
+                            for chunk in split_into_chunks(ai_response):
+                                await inter.channel.send(
+                                    chunk,
+                                    allowed_mentions=AllowedMentions(
+                                        users=False,
+                                        everyone=False,
+                                    ),
+                                )
+                        else:
+                            await inter.edit_original_response(embed=AIErrorEmbed())
                     else:
-                        await inter.edit_original_response(embed=AIErrorEmbed())
+                        user = await get_or_create_user(
+                            session,
+                            discord_id=inter.author.id,
+                            guild_id=inter.guild.id,
+                        )
+                        await session.refresh(user)
+                        if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[user.current_personality_name]):
+                            await inter.edit_original_response(embed=SuccessEmbed())
+                            for chunk in split_into_chunks(ai_response):
+                                await inter.channel.send(
+                                    chunk,
+                                    allowed_mentions=AllowedMentions(
+                                        users=False,
+                                        everyone=False,
+                                    ),
+                                )
+                        else:
+                            await inter.edit_original_response(embed=AIErrorEmbed())
                 else:
-                    user = await get_or_create_user(
-                        session,
-                        discord_id=inter.author.id,
-                        guild_id=inter.guild.id,
-                    )
-                    await session.refresh(user)
-                    if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[user.current_personality_name]):
-                        await inter.edit_original_response(embed=SuccessEmbed())
-                        for chunk in split_into_chunks(ai_response):
-                            await inter.channel.send(
-                                chunk,
-                                allowed_mentions=AllowedMentions(
-                                    users=False,
-                                    everyone=False,
-                                ),
-                            )
-                    else:
-                        await inter.edit_original_response(embed=AIErrorEmbed())
-            else:
-                await inter.edit_original_response(embed=AIIsDisabledEmbed())
+                    await inter.edit_original_response(embed=AIIsDisabledEmbed())
+        else:
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
     @Cog.listener()
     async def on_message(self, message: Message) -> None:
