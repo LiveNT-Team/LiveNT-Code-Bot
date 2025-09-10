@@ -14,6 +14,7 @@ bot = InteractionBot(
         messages=True,
         guilds=True,
         members=True,
+        message_content=True,
     ),
     test_guilds=TEST_GUILDS,
     command_sync_flags=CommandSyncFlags(
