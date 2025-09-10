@@ -15,6 +15,7 @@ class GuildSettings(Base):
     greetings_channel_id: Mapped[int] = mapped_column(BIGINT(), nullable=True)
     ai_channel_id: Mapped[int] = mapped_column(BIGINT(), nullable=True)
     activist_role_id: Mapped[int] = mapped_column(BIGINT(), nullable=True)
+    developer_role_id: Mapped[int] = mapped_column(BIGINT(), nullable=True)
     activist_role_messages_count: Mapped[int] = mapped_column(nullable=True)
     """Сколько сообщений надо отправить чтобы получить роль активиста"""
     is_greetings_enabled: Mapped[bool] = mapped_column(default=False)
