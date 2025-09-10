@@ -1,5 +1,5 @@
 from disnake.ext.commands import Cog, Param, slash_command, String
-from disnake import AppCmdInter
+from disnake import AppCmdInter, Message
 
 
 from .embeds import AIErrorEmbed, AIIsDisabledEmbed
@@ -42,6 +42,24 @@ class AICog(Cog):
                         await inter.edit_original_response(embed=AIErrorEmbed())
             else:
                 await inter.edit_original_response(embed=AIIsDisabledEmbed())
+
+    @Cog.listener()
+    async def on_message(self, message: Message) -> None:
+        if message.guild:
+            if not message.author.bot:
+                async with session_factory() as session:
+                    guild_settings = await get_or_create_guild_settings(session, guild_id=message.guild.id)
+                    if self.bot.user in message.mentions or message.channel.id == guild_settings.ai_channel_id:
+                        if guild_settings.is_ai_enabled:
+                            user = await get_or_create_user(
+                                session,
+                                guild_id=message.guild.id,
+                                discord_id=message.author.id,
+                            )
+                            if ai_response := await send_ai_request(text=message.content, personality=PERSONALITIES[user.current_personality_name]):
+                                await reply_long_message(ai_response, message_to_reply=message)
+                            else:
+                                await message.reply(embed=AIErrorEmbed())
 
 
 __all__ = ("AICog",)
