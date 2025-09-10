@@ -8,7 +8,7 @@ from ...services.users import get_or_create_user
 from ...services.guilds_settings import get_or_create_guild_settings
 from ...core.configuration import PERSONALITIES
 from ...core.database import session_factory
-from ...core.utils import send_long_message
+from ...core.utils import reply_long_message
 
 
 class AICog(Cog):
@@ -24,24 +24,22 @@ class AICog(Cog):
             guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
             await session.refresh(guild_settings)
             if guild_settings.is_ai_enabled:
-                async with inter.channel.typing():
-                    if personality_name:
-                        if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[personality_name]):
-                            await send_long_message(inter.channel, ai_response)
-                        else:
-                            await inter.edit_original_response(embed=AIErrorEmbed())
+                if personality_name:
+                    if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[personality_name]):
+                        await reply_long_message(ai_response, inter=inter)
                     else:
-                        user = await get_or_create_user(
-                            session,
-                            discord_id=inter.author.id,
-                            guild_id=inter.guild.id,
-                        )
-                        await session.refresh(user)
-                        if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[user.current_personality_name]):
-                            await send_long_message(inter.channel, ai_response)
-                        else:
-                            await inter.edit_original_response(embed=AIErrorEmbed())
-
+                        await inter.edit_original_response(embed=AIErrorEmbed())
+                else:
+                    user = await get_or_create_user(
+                        session,
+                        discord_id=inter.author.id,
+                        guild_id=inter.guild.id,
+                    )
+                    await session.refresh(user)
+                    if ai_response := await send_ai_request(text=text, personality=PERSONALITIES[user.current_personality_name]):
+                        await reply_long_message(ai_response, inter=inter)
+                    else:
+                        await inter.edit_original_response(embed=AIErrorEmbed())
             else:
                 await inter.edit_original_response(embed=AIIsDisabledEmbed())
 

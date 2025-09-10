@@ -9,7 +9,7 @@ from ...core.database import session_factory
 from ...core.logger import logger
 from ...core.embeds import NotEnoughPermissionsEmbed
 from ...core.configuration import PERSONALITIES
-from ...core.utils import send_long_message
+from ...core.utils import reply_long_message
 from .embeds import ActivistRoleAwardedEmbed
 
 
@@ -52,7 +52,7 @@ class EventsHandlerCog(Cog):
                                 discord_id=message.author.id,
                             )
                             if ai_response := await send_ai_request(text=message.content, personality=PERSONALITIES[user.current_personality_name]):
-                                await send_long_message(message.channel, ai_response)
+                                await reply_long_message(ai_response, message_to_reply=message)
                             else:
                                 await message.reply("Ошибка")
 
