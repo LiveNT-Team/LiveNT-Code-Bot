@@ -2,13 +2,13 @@ import httpx
 import base64
 from pathlib import Path
 
-from ...core.configuration import PERSONALITIES, AI_API_KEY, AI_API_URL
+from ...core.configuration import PERSONALITIES, AI_API_KEY, AI_API_URL, DEFAULT_PERSONALITY_NAME
 from ...core.typed_dicts import Personality
 
 
 async def send_ai_request(
     text: str,
-    personality: Personality = PERSONALITIES["default"],
+    personality: Personality = PERSONALITIES[DEFAULT_PERSONALITY_NAME],
     image_path: str | None = None,
 ) -> str | None:
     messages = [
@@ -22,20 +22,24 @@ async def send_ai_request(
         },
     ]
 
-    if image_path and Path(image_path).exists():
-        if Path(image_path).stat().st_size <= 10 * 1024 * 1024:
-            with open(image_path, "rb") as f:
-                data = base64.b64encode(f.read()).decode("utf-8")
-            ext = Path(image_path).suffix.lower()
-            mime = {"png": "image/png", "gif": "image/gif", "webp": "image/webp", "bmp": "image/bmp"}.get(
-                ext[1:],
-                "image/jpeg",
-            )
-            messages[1]["images"] = [
-                {
-                    "base64": f"data:{mime};base64,{data}",
-                },
-            ]
+    if image_path and (image_path.startswith("http://") or image_path.startswith("https://")):
+        try:
+            async with httpx.AsyncClient() as client:
+                response = await client.get(image_path, timeout=30)
+                if response.status_code == 200 and len(response.content) <= 10 * 1024 * 1024:
+                    data = base64.b64encode(response.content).decode("utf-8")
+                    ext = image_path.split(".")[-1].lower().split("?")[0] 
+                    mime = {"png": "image/png", "webp": "image/webp"}.get(
+                        ext,
+                        "image/jpeg",
+                    )
+                    messages[1]["images"] = [
+                        {
+                            "base64": f"data:{mime};base64,{data}",
+                        },
+                    ]
+        except (httpx.RequestError, httpx.TimeoutException):
+            pass
     async with httpx.AsyncClient() as httpx_client:
         response = await httpx_client.post(
             AI_API_URL,
