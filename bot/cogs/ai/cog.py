@@ -1,6 +1,5 @@
 from disnake.ext.commands import Cog, Param, slash_command, String, InteractionBot
-from disnake import AllowedMentions, AppCmdInter, Message
-
+from disnake import AllowedMentions, AppCmdInter, Attachment, Message
 
 from .embeds import AIErrorEmbed, AIIsDisabledEmbed
 from ...services.aiu import send_ai_request
@@ -10,6 +9,7 @@ from ...core.embeds import TheCommandDoesNotSupportDMEmbed
 from ...core.configuration import PERSONALITIES
 from ...core.database import session_factory
 from ...core.utils import split_into_chunks
+from ...core.logger import logger
 from ...core.base_embeds import SuccessEmbed
 
 
@@ -70,6 +70,13 @@ class AICog(Cog):
 
     @Cog.listener()
     async def on_message(self, message: Message) -> None:
+        def get_image_url_from_attachments(attachments:list[Attachment])->str|None:
+            for attachment in attachments:
+                logger.info(attachment.content_type)
+                match attachment.content_type:
+                    case "image/png"|"image/jpg"|"image/jpeg"|"image/webp"|"image/svg":
+                        return attachment.url
+            return None
         if message.guild:
             if not message.author.bot:
                 async with session_factory() as session:
@@ -81,7 +88,11 @@ class AICog(Cog):
                                 guild_id=message.guild.id,
                                 discord_id=message.author.id,
                             )
-                            if ai_response := await send_ai_request(text=message.content, personality=PERSONALITIES[user.current_personality_name]):
+                            if ai_response := await send_ai_request(
+                                text=message.content,
+                                personality=PERSONALITIES[user.current_personality_name],
+                                image_url=get_image_url_from_attachments(message.attachments),
+                            ):
                                 for chunk in split_into_chunks(ai_response):
                                     await message.channel.send(
                                         chunk,
