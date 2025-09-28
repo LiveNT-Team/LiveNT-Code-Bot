@@ -2,7 +2,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from ...core.models import User
-from ...core.database import session_factory
 
 
 async def get_user(

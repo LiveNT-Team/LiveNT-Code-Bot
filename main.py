@@ -28,8 +28,8 @@ bot = InteractionBot(
         PersonalitiesCog(),
         SettingsCog(),
         StatsCog(),
-        EventsHandlerCog(),
-        AICog(bot=bot),
+        EventsHandlerCog(bot=bot),
+        AICog(),
     }
 ]
 
