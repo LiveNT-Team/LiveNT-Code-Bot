@@ -11,6 +11,7 @@ engine = create_async_engine(DEV_SQLALCHEMY_URL if IS_DEV_MODE else PROD_SQLALCH
 session_factory = async_sessionmaker(
     bind=engine,
     autoflush=True,
+    expire_on_commit=False,
 )
 __all__ = (
     "engine",

@@ -58,8 +58,6 @@ class EventsHandlerCog(Cog):
                     guild_id=message.guild.id,
                     discord_id=message.author.id,
                 )
-                await session.refresh(author_user_model)
-                await session.refresh(guild_settings)
                 await StatsCog.handle_message(
                     session=session,
                     message=message,
