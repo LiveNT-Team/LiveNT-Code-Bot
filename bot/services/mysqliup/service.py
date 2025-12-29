@@ -49,7 +49,7 @@ class MySqliUp:
                     await conn.commit()
                 except Exception as e:
                     await conn.rollback()
-                    raise
+                    raise e
 
     async def create_data_base(self, database: str) -> None:
         database = self._validate_identifier(database)
