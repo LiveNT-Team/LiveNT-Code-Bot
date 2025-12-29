@@ -2,6 +2,19 @@ services:
   bot:
     build:
       dockerfile: ./Dockerfile
-      context: ./
+      context: ./bot
+    environment:
+      - IS_DEV_MODE=${IS_DEV_MODE}
+      - BOT_TOKEN=${BOT_TOKEN}
+      - AI_API_URL=${AI_API_URL}
+      - AI_API_KEY=${AI_API_KEY}
+      - MYSQL_USERNAME=${MYSQL_USERNAME}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - DEV_MYSQL_USERNAME=${DEV_MYSQL_USERNAME}
+      - DEV_MYSQL_HOST=${DEV_MYSQL_HOST}
+      - DEV_MYSQL_PASSWORD=${DEV_MYSQL_PASSWORD}
+      - DEV_MYSQL_DATABASE=${DEV_MYSQL_DATABASE}
     volumes:
       - ./bot/databases:/livent_bot/bot/databases
