@@ -21,8 +21,8 @@ services:
       - ./bot/databases:/livent_bot/bot/databases
   dev-mysql:
     image: mysql:latest
-    expose:
-      - 3306
+    ports:
+      - 3306:3306
     environment:
       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
       - MYSQL_PASSWORD=${DEV_MYSQL_PASSWORD}
