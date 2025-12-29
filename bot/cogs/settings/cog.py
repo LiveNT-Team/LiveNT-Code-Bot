@@ -39,6 +39,40 @@ class SettingsCog(Cog):
 
     # region ai commands
     @enable.sub_command(
+        name="ai_thinking",
+        description="Включает глубокое мышление ИИ",
+    )
+    async def enable_ai(self, inter: AppCmdInter) -> None:
+        if inter.guild:
+            async with session_factory() as session:
+                guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
+                if inter.author.guild_permissions.administrator or inter.guild.get_role(guild_settings.developer_role_id) in inter.author.roles:
+                    guild_settings.is_ai_enabled = True
+                    await session.commit()
+                    await inter.response.send_message(embed=AIEnabledEmbed())
+                else:
+                    await inter.response.send_message(embed=NotEnoughPermissionsEmbed(), ephemeral=True)
+        else:
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
+
+    @disable.sub_command(
+        name="ai_thinking",
+        description="Выключает глубокое мышление ИИ",
+    )
+    async def enable_ai(self, inter: AppCmdInter) -> None:
+        if inter.guild:
+            async with session_factory() as session:
+                guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
+                if inter.author.guild_permissions.administrator or inter.guild.get_role(guild_settings.developer_role_id) in inter.author.roles:
+                    guild_settings.is_ai_enabled = True
+                    await session.commit()
+                    await inter.response.send_message(embed=AIEnabledEmbed())
+                else:
+                    await inter.response.send_message(embed=NotEnoughPermissionsEmbed(), ephemeral=True)
+        else:
+            await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
+
+    @enable.sub_command(
         name="ai",
         description="Включает ИИ функционал",
     )
