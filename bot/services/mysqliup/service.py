@@ -9,6 +9,7 @@ from ...core.configuration import (
     DEV_MYSQL_PASSWORD,
     DEV_MYSQL_USERNAME,
     DEV_MYSQL_HOST,
+    MYSQL_PORT,
     IS_DEV_MODE,
 )
 from typing import Optional, Union, List, Dict, Any
@@ -32,6 +33,7 @@ class MySqliUp:
             user=DEV_MYSQL_USERNAME if IS_DEV_MODE else MYSQL_USERNAME,
             password=DEV_MYSQL_PASSWORD if IS_DEV_MODE else MYSQL_PASSWORD,
             db=DEV_MYSQL_DATABASE if IS_DEV_MODE else MYSQL_DATABASE,
+            port=MYSQL_PORT,
             autocommit=False,
         )
 
