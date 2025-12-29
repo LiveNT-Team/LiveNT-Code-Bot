@@ -5,23 +5,18 @@ You can find full configuration documentation at `./bot/docs/project_configurati
 """
 
 import logging
-from enum import StrEnum, auto
 from os import getenv
 from typing import Literal, Sequence
 from pathlib import Path
-from dotenv import load_dotenv
 
 from .typed_dicts import Personality
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-ENV_FILENAME = BASE_DIR / ".env"
-
-assert load_dotenv(ENV_FILENAME), f"path ENV_FILENAME is not exists"
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 IS_DEV_MODE = False
 
-LOGGING_FILENAME = BASE_DIR / "bot/logs/logs.log"
+LOGGING_FILENAME = BASE_DIR / "logs/logs.log"
 LOGGING_FILEMODE: Literal["w", "a"] = "w"
 LOGGING_LEVEL: Literal[10, 20, 30, 40, 50] = logging.INFO
 LOGGING_FORMAT: str = "%(asctime)s [%(levelname)s] %(message)s"
@@ -37,11 +32,7 @@ DEV_MYSQL_PASSWORD = getenv("DEV_MYSQL_PASSWORD")
 DEV_MYSQL_USERNAME = getenv("DEV_MYSQL_USERNAME")
 DEV_MYSQL_HOST = getenv("DEV_MYSQL_HOST")
 
-
-PROD_SQLALCHEMY_URL = f"mysql+aiomysql://{MYSQL_USERNAME}:{MYSQL_PASSWORD}@{MYSQL_HOST}/LCB"
-DEV_SQLALCHEMY_URL = f"mysql+aiomysql://{DEV_MYSQL_USERNAME}:{DEV_MYSQL_PASSWORD}@{DEV_MYSQL_HOST}/LCB"
-
-TEST_GUILDS: Sequence[int] = {1401173801689022517, 1412036625625514138}
+TEST_GUILDS: Sequence[int] = getenv("TEST_GUILDS").rstrip().split(",")
 
 BOT_TOKEN = getenv("BOT_TOKEN")
 
