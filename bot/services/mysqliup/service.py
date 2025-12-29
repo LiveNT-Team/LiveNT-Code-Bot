@@ -16,9 +16,8 @@ from typing import Optional, Union, List, Dict, Any
 
 
 class MySqliUp:
-    def __init__(self, name: str):
+    def __init__(self):
         self._pool = None
-        self._database = self._validate_identifier(name)
 
     def _validate_identifier(self, identifier: str) -> str:
         if not re.match(r"^[a-zA-Z0-9_]+$", identifier):
