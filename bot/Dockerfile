@@ -1,4 +1,4 @@
-FROM python:3.13-slim-bookworm
+FROM python:3.14-slim-bookworm
 WORKDIR /livent_bot
 RUN pip install --upgrade pip wheel poetry
 RUN poetry config virtualenvs.create false

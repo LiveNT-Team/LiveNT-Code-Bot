@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
 echo Applying migrations...
-alembic upgrade head
+# ДОБАВИТЬ ВЫПОЛНЕНИЕ МИГРАЦИЙ
 echo Migrations applied
 exec "$@"
