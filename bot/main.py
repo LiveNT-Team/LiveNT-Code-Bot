@@ -1,7 +1,7 @@
 from disnake.ext.commands import InteractionBot, CommandSyncFlags
 from disnake import Intents
 
-from core.configuration import BOT_TOKEN, TEST_GUILDS, IS_DEV_MODE
+from core.configuration import BOT_TOKEN
 
 bot = InteractionBot(
     intents=Intents(
@@ -10,7 +10,6 @@ bot = InteractionBot(
         members=True,
         message_content=True,
     ),
-    test_guilds=TEST_GUILDS if IS_DEV_MODE else None,
     command_sync_flags=CommandSyncFlags(
         sync_commands_debug=True,
     ),

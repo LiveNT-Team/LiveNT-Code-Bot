@@ -6,7 +6,7 @@ You can find full configuration documentation at `./bot/docs/project_configurati
 
 import logging
 from os import getenv
-from typing import Literal, Sequence
+from typing import Literal
 from pathlib import Path
 
 from .typed_dicts import Personality
@@ -32,8 +32,6 @@ DEV_MYSQL_DATABASE = getenv("DEV_MYSQL_DATABASE")
 DEV_MYSQL_PASSWORD = getenv("DEV_MYSQL_PASSWORD")
 DEV_MYSQL_USERNAME = getenv("DEV_MYSQL_USERNAME")
 DEV_MYSQL_HOST = getenv("DEV_MYSQL_HOST")
-
-TEST_GUILDS: Sequence[int] = getenv("TEST_GUILDS").rstrip().split(",")
 
 BOT_TOKEN = getenv("BOT_TOKEN")
 
