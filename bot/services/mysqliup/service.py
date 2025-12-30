@@ -1,6 +1,6 @@
 import aiomysql
 import re
-from ...core.configuration import (
+from core.configuration import (
     MYSQL_HOST,
     MYSQL_USERNAME,
     MYSQL_PASSWORD,
