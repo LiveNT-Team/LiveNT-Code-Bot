@@ -17,6 +17,8 @@ services:
       - DEV_MYSQL_PASSWORD=${DEV_MYSQL_PASSWORD}
       - DEV_MYSQL_DATABASE=${DEV_MYSQL_DATABASE}
       - TEST_GUILDS=${TEST_GUILDS}
+    volumes:
+      - ./bot/migrations:/livent_bot/migrations
   dev-mysql:
     image: mysql:latest
     ports:
@@ -28,5 +30,14 @@ services:
       - MYSQL_DATABASE=${DEV_MYSQL_DATABASE}
     volumes:
       - mysql-data:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin
+    ports:
+      - 8000:80
+    environment:
+       - PMA_USER=${DEV_MYSQL_USERNAME}
+       - PMA_HOST=${DEV_MYSQL_HOST}
+       - PMA_PASSWORD=${DEV_MYSQL_PASSWORD}
+       - PMA_PORT=3306
 volumes:
   mysql-data:
