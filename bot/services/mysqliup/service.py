@@ -2,15 +2,10 @@ import aiomysql
 import re
 from core.configuration import (
     MYSQL_HOST,
-    MYSQL_USERNAME,
+    MYSQL_USER,
     MYSQL_PASSWORD,
     MYSQL_DATABASE,
-    DEV_MYSQL_DATABASE,
-    DEV_MYSQL_PASSWORD,
-    DEV_MYSQL_USERNAME,
-    DEV_MYSQL_HOST,
     MYSQL_PORT,
-    IS_DEV_MODE,
 )
 from typing import Optional, Union, List, Dict, Any
 
@@ -28,10 +23,10 @@ class MySqliUp:
 
     async def connect(self):
         self._pool = await aiomysql.create_pool(
-            host=DEV_MYSQL_HOST if IS_DEV_MODE else MYSQL_HOST,
-            user=DEV_MYSQL_USERNAME if IS_DEV_MODE else MYSQL_USERNAME,
-            password=DEV_MYSQL_PASSWORD if IS_DEV_MODE else MYSQL_PASSWORD,
-            db=DEV_MYSQL_DATABASE if IS_DEV_MODE else MYSQL_DATABASE,
+            host=MYSQL_HOST,
+            user=MYSQL_USER,
+            password=MYSQL_PASSWORD,
+            db=MYSQL_DATABASE,
             port=MYSQL_PORT,
             autocommit=False,
         )
