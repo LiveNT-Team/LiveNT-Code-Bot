@@ -1,13 +1,7 @@
 from disnake.ext.commands import InteractionBot, CommandSyncFlags
 from disnake import Intents
 
-from bot.core.configuration import BOT_TOKEN, TEST_GUILDS, IS_DEV_MODE
-from bot.cogs.help import HelpCog
-from bot.cogs.personalities import PersonalitiesCog
-from bot.cogs.settings import SettingsCog
-from bot.cogs.stats import StatsCog
-from bot.cogs.events_handler import EventsHandlerCog
-from bot.cogs.ai import AICog
+from core.configuration import BOT_TOKEN, TEST_GUILDS, IS_DEV_MODE
 
 bot = InteractionBot(
     intents=Intents(
@@ -21,17 +15,7 @@ bot = InteractionBot(
         sync_commands_debug=True,
     ),
 )
-[
-    bot.add_cog(cog)
-    for cog in {
-        HelpCog(),
-        PersonalitiesCog(),
-        SettingsCog(),
-        StatsCog(),
-        EventsHandlerCog(bot=bot),
-        AICog(),
-    }
-]
+[bot.add_cog(cog) for cog in {}]
 
 
 bot.run(BOT_TOKEN)
