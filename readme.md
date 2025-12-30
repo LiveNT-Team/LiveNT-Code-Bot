@@ -5,29 +5,17 @@
 </p>
 <p align=center>
     <a href="https://python.org">
-        <img src="https://img.shields.io/badge/3.13%2B-blue?logo=python&logoColor=white" alt="Python version">
+        <img src="https://img.shields.io/badge/3.14%2B-blue?logo=python&logoColor=white" alt="Python version">
     </a>
     <a href="https://pypi.org/project/black">
         <img src="https://img.shields.io/badge/black-blue" alt="Black">
     </a>
     <img src="https://img.shields.io/badge/v0.1.1-blue" alt="Project version">
 </p>
+    
+## О проекте
 
-## Технологии
-
-### Стеки
-
-- Python3.13
-
-### Фреймворки и библиотеки
-
-- SQLAchemy
-- Disnake
-
-### Другие инструменты
-
-- Alembic
-- uv
+Сервер создан для дискорд сервера LiveNT Code, включает в себя команды для администрирования. Для установки и запуска смотрите [тут](./docs/install_and_launch.md). Для документации смотрите [здесь](./docs/documentaion.md).
 
 ## Авторы
 
