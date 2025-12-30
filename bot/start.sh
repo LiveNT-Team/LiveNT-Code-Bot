@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 echo Starting...
 python3 ./main.py
