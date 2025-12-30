@@ -34,6 +34,7 @@ AI_API_URL = getenv("AI_API_URL")
 AI_API_KEY = getenv("AI_API_KEY")
 
 DEFAULT_PERSONALITY_NAME: str = "assistant"
+"""Начальное название личности ИИ для новых пользователей"""
 PERSONALITIES: dict[str, Personality] = {
     "assistant": Personality(
         name="Ассистент",
@@ -72,3 +73,4 @@ PERSONALITIES: dict[str, Personality] = {
         max_tokens=1500,
     ),
 }
+"""Информация о личностях ИИ"""

@@ -1,10 +1,12 @@
-"""
-Module contains `logger` object to interact with bot logs
-"""
-
 from logging import FileHandler, StreamHandler, getLogger, basicConfig
 
-from .configuration import LOGGING_FILEMODE, LOGGING_FILENAME, LOGGING_LEVEL, LOGGING_FORMAT, LOGGING_DATETIME_FORMAT
+from .configuration import (
+    LOGGING_FILEMODE,
+    LOGGING_FILENAME,
+    LOGGING_LEVEL,
+    LOGGING_FORMAT,
+    LOGGING_DATETIME_FORMAT,
+)
 
 logger = getLogger(__name__)
 basicConfig(
