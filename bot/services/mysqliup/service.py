@@ -67,6 +67,39 @@ class MySqliUp:
 					await self._rollback(conn)
 					raise e
 
+	async def create_data_base(self, database: str) -> None:
+		database = self._validate_identifier(database)
+		await self.execute(f"CREATE DATABASE IF NOT EXISTS `{database}`")
+
+	async def delete_data_base(self, database: str) -> None:
+		database = self._validate_identifier(database)
+		await self.execute(f"DROP DATABASE IF EXISTS `{database}`")
+
+	async def create_table(self, table: str, columns: Dict[str, str]) -> None:
+		table = self._validate_identifier(table)
+		column_defs = []
+		for col_name, col_type in columns.items():
+			validated_name = self._validate_identifier(col_name)
+			column_defs.append(f"`{validated_name}` {col_type}")
+
+		columns_sql = ", ".join(column_defs)
+		await self.execute(f"CREATE TABLE IF NOT EXISTS `{table}` ({columns_sql})")
+
+	async def delete_table(self, table: str) -> None:
+		table = self._validate_identifier(table)
+		await self.execute(f"DROP TABLE IF EXISTS `{table}`")
+
+	async def create_column(self, table: str, column: str, column_type: str) -> None:
+		table = self._validate_identifier(table)
+		column = self._validate_identifier(column)
+		await self.execute(
+			f"ALTER TABLE `{table}` ADD COLUMN `{column}` {column_type}"
+		)
+
+	async def delete_column(self, table: str, column: str) -> None:
+		table = self._validate_identifier(table)
+		column = self._validate_identifier(column)
+		await self.execute(f"ALTER TABLE `{table}` DROP COLUMN `{column}`")
 
 	async def create_row(self, table: str, data: Dict[str, Any]) -> None:
 		table = self._validate_identifier(table)
