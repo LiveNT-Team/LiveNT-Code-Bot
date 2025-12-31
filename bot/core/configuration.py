@@ -24,14 +24,9 @@ LOGGING_DATETIME_FORMAT: str = "%Y-%m-%d %H:%M:%S"
 
 MYSQL_DATABASE = getenv("MYSQL_DATABASE")
 MYSQL_PASSWORD = getenv("MYSQL_PASSWORD")
-MYSQL_USERNAME = getenv("MYSQL_USERNAME")
+MYSQL_USER = getenv("MYSQL_USER")
 MYSQL_HOST = getenv("MYSQL_HOST")
 MYSQL_PORT = 3306
-
-DEV_MYSQL_DATABASE = getenv("DEV_MYSQL_DATABASE")
-DEV_MYSQL_PASSWORD = getenv("DEV_MYSQL_PASSWORD")
-DEV_MYSQL_USERNAME = getenv("DEV_MYSQL_USERNAME")
-DEV_MYSQL_HOST = getenv("DEV_MYSQL_HOST")
 
 BOT_TOKEN = getenv("BOT_TOKEN")
 
@@ -39,6 +34,7 @@ AI_API_URL = getenv("AI_API_URL")
 AI_API_KEY = getenv("AI_API_KEY")
 
 DEFAULT_PERSONALITY_NAME: str = "assistant"
+"""Начальное название личности ИИ для новых пользователей"""
 PERSONALITIES: dict[str, Personality] = {
     "assistant": Personality(
         name="Ассистент",
@@ -77,3 +73,4 @@ PERSONALITIES: dict[str, Personality] = {
         max_tokens=1500,
     ),
 }
+"""Информация о личностях ИИ"""

@@ -1,7 +1,3 @@
-"""
-The module provides some base embeds classes, ErrorEmbed, SuccessEmbed, WarningEmbed, InfoEmbed.
-"""
-
 from disnake import Embed, Color
 from datetime import datetime
 

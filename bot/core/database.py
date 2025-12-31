@@ -1,7 +1,3 @@
-"""
-Module contains `engine` and `session_factory` objects to connect and execute queries in database
-"""
-
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
 from .configuration import PROD_SQLALCHEMY_URL, DEV_SQLALCHEMY_URL, IS_DEV_MODE
