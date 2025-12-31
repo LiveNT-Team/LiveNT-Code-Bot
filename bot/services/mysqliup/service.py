@@ -32,11 +32,8 @@ class MySqliUp:
 		await cursor.execute(query, params)
 
 	def _validate_identifier(self, identifier: str) -> str:
-		if not re.match(r"^[a-zA-Z0-9_]+$", identifier):
-			raise ValueError(f"Недопустимое имя идентификатора: {identifier}")
-		if len(identifier) > 64:
-			raise ValueError("Имя идентификатора слишком длинное (макс. 64 символа)")
-		return identifier
+		if re.match(r"^[a-zA-Z0-9_]+$", identifier):
+			return identifier
 
 	async def connect(self):
 		self.pool = await aiomysql.create_pool(
@@ -47,25 +44,6 @@ class MySqliUp:
 			port=MYSQL_PORT,
 			autocommit=False,
 		)
-
-	async def execute(self, query: str, params: tuple = (), fetch: str = None) -> Any:
-		async with self.pool.acquire() as conn:
-			async with conn.cursor(aiomysql.DictCursor) as cursor:
-				try:
-					await self._begin(conn)
-					await self._execute(conn, cursor, query, params)
-					if fetch == "one":
-						res = await cursor.fetchone()
-						await self._commit(conn)
-						return res if res is not None else False
-					if fetch == "all":
-						res = await cursor.fetchall()
-						await self._commit(conn)
-						return res
-					await self._commit(conn)
-				except Exception as e:
-					await self._rollback(conn)
-					raise e
 
 	async def create_data_base(self, database: str) -> None:
 		database = self._validate_identifier(database)
@@ -212,15 +190,13 @@ class MySqliUp:
 		validated_columns = [self._validate_identifier(col) for col in columns]
 		order_column = self._validate_identifier(order_by)
 
-		if order_dir.upper() not in ("ASC", "DESC"):
-			raise ValueError("order_dir должен быть 'ASC' или 'DESC'")
-
-		columns_sql = ", ".join([f"`{col}`" for col in validated_columns])
-		return await self.execute(
-			f"SELECT {columns_sql} FROM `{table}` ORDER BY `{order_column}` {order_dir.upper()}",
-			(),
-			"one",
-		)
+		if order_dir.upper() in ("ASC", "DESC"):
+			columns_sql = ", ".join([f"`{col}`" for col in validated_columns])
+			return await self.execute(
+				f"SELECT {columns_sql} FROM `{table}` ORDER BY `{order_column}` {order_dir.upper()}",
+				(),
+				"one",
+			)
 
 	async def close(self) -> None:
 		if self.pool:
