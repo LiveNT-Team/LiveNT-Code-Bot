@@ -18,6 +18,7 @@ from typing import Optional, Union, List, Dict, Any
 class MySqliUp:
 	def __init__(self):
 		self.pool = None
+		self._conn = None
 
 	async def connect(self):
 		self.pool = await aiomysql.create_pool(
@@ -29,14 +30,30 @@ class MySqliUp:
 			autocommit=False,
 		)
 
-	async def begin(self, conn) -> None:
-		await conn.begin()
+	async def begin(self) -> None:
+		self._conn = await self.pool.acquire()
+		await self._conn.begin()
 
-	async def commit(self, conn) -> None:
-		await conn.commit()
+	async def commit(self) -> None:
+		if self._conn:
+			try:
+				await self._conn.commit()
+			finally:
+				self.pool.release(self._conn)
+				self._conn = None
 
-	async def rollback(self, conn) -> None:
-		await conn.rollback()
+	async def rollback(self) -> None:
+		if self._conn:
+			try:
+				await self._conn.rollback()
+			finally:
+				self.pool.release(self._conn)
+				self._conn = None
+
+	async def close(self):
+		if self.pool:
+			self.pool.close()
+			await self.pool.wait_closed()
 
 	async def _execute(self, query: str, params: tuple = (), conn=None, cursor=None, fetch: str = None):
 		if conn is None or cursor is None:

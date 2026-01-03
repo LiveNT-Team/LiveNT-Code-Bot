@@ -67,26 +67,12 @@ async def test_all_methods():
 	print("update_row - строка обновлена")
 	
 	# 14-16. Транзакции: begin, commit, rollback
-	async with db.pool.acquire() as conn:
-		await db.begin(conn)
-		print("begin - транзакция начата")
-		
-		async with conn.cursor() as cursor:
-			await db._execute(conn, cursor, 
-				"INSERT INTO userssz (name, age, email) VALUES (%s, %s, %s)",
-				("Тест", 40, "test@test.ru"))
-		
-		await db.rollback(conn)
-		print("rollback - откат транзакции")
-		
-		await db.begin(conn)
-		async with conn.cursor() as cursor:
-			await db._execute(conn, cursor,
-				"INSERT INTO userssz (name, age, email) VALUES (%s, %s, %s)",
-				("Коммит", 35, "commit@test.ru"))
-		
-		await db.commit(conn)
-		print("commit - транзакция зафиксирована")
+    await db.begin()              
+        try:            
+            await db.commit()           
+        except Exception as e:
+            await db.rollback()
+            raise
 	
 	# 17. delete_row
 	await db.delete_row("userssz", "name = %s", ("Коммит",))
