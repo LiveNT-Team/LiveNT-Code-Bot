@@ -1,8 +1,11 @@
 from disnake.ext.commands import InteractionBot, CommandSyncFlags
 from disnake import Intents
+from logging import getLogger
 
 from core.configuration import BOT_TOKEN
+from cogs.settings.cog import SettingsCog
 
+logger = getLogger(__name__)
 bot = InteractionBot(
     intents=Intents(
         messages=True,
@@ -14,7 +17,14 @@ bot = InteractionBot(
         sync_commands_debug=True,
     ),
 )
-[bot.add_cog(cog) for cog in {}]
+
+
+@bot.event
+async def on_ready() -> None:
+    logger.info("Bot ready")
+
+
+[bot.add_cog(cog) for cog in {SettingsCog()}]
 
 
 bot.run(BOT_TOKEN)
