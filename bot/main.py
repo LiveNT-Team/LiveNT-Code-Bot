@@ -4,8 +4,8 @@ from logging import getLogger
 
 from core.configuration import BOT_TOKEN
 from cogs.settings.cog import SettingsCog
+from core.logger import logger
 
-logger = getLogger(__name__)
 bot = InteractionBot(
     intents=Intents(
         messages=True,
