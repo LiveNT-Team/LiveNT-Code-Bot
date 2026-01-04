@@ -13,6 +13,14 @@ class SettingsCog(Cog):
     #     pass
 
     @slash_command()
+    async def set(self, inter: AppCmdInter) -> None:
+        pass
+
+    @slash_command()
+    async def get(self, inter: AppCmdInter) -> None:
+        pass
+
+    @get.sub_command("settings")
     async def get_settings(self, inter: AppCmdInter) -> None:
         if not inter.author.guild_permissions.administrator:
             return await inter.response.send_message(embed=NotEnoughPermissionsEmbed())
@@ -26,7 +34,7 @@ class SettingsCog(Cog):
         settings_embed.add_field("Тестовая опция", str(guild.test_option))
         await inter.response.send_message(embed=settings_embed, ephemeral=True)
 
-    @slash_command()
+    @set.sub_command("test_option")
     async def set_test_option(
         self,
         inter: AppCmdInter,
