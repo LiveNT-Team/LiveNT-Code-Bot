@@ -1,6 +1,5 @@
 from disnake.ext.commands import InteractionBot, CommandSyncFlags
 from disnake import Intents
-from logging import getLogger
 
 from core.configuration import BOT_TOKEN
 from cogs.settings.cog import SettingsCog

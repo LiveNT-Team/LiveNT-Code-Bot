@@ -1,7 +1,7 @@
-from typing import NamedTuple
+from typing import TypedDict
 
 
-class Guild(NamedTuple):
+class Guild(TypedDict):
     id: int
     discord_gid: int
-    test_option: int
+    developer_role_id: int

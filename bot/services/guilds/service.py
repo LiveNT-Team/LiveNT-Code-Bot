@@ -1,4 +1,3 @@
-from typing import Literal
 from core.models.guild import Guild
 from services.mysqliup import MySqliUp
 
@@ -6,11 +5,15 @@ from services.mysqliup import MySqliUp
 async def get_guild_by_discord_gid(db: MySqliUp, gid: int) -> Guild | None:
     if row := await db.select_row(
         "guilds",
-        Guild._fields,
+        [
+            "id",
+            "discord_gid",
+            "developer_role_id",
+        ],
         where="discord_gid = %s",
         params=(gid,),
     ):
-        return Guild._make(row)
+        return row
     return None
 
 
