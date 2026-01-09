@@ -6,8 +6,8 @@ if [ $DEBUG -eq 0 ]; then
 fi
 if [ $DEBUG -eq 1 ]; then
     echo Starting in debug mode
-    echo Debugpy will listen on 1111
-    python -m debugpy --listen 0.0.0.0:1111 --wait-for-client ./main.py
+    echo Debugpy will listen on $DEBUGPY_PORT
+    python -m debugpy --listen 0.0.0.0:$DEBUGPY_PORT --wait-for-client ./main.py
 fi
 
 exec "$@"
