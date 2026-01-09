@@ -3,7 +3,7 @@ from typing import Callable, Awaitable
 from functools import wraps
 from services.mysqliup.service import MySqliUp
 from core.embeds import NotEnoughPermissionsEmbed
-from services.guilds.service import get_or_create_by_discord_id
+from services.guilds.service import get_or_create_guild
 
 
 def has_developer_role(func: Callable[..., Awaitable]):
@@ -19,7 +19,7 @@ def has_developer_role(func: Callable[..., Awaitable]):
         if inter.author.guild_permissions.administrator:
             return await func(*args, **kwargs)
 
-        guild = await get_or_create_by_discord_id(db, gid=inter.guild_id)
+        guild = await get_or_create_guild(db, gid=inter.guild_id)
         await db.commit()
 
         if not guild["developer_role_id"]:

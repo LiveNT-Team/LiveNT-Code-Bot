@@ -1,7 +1,7 @@
 from disnake.ext.commands import Cog, Param, slash_command, has_permissions
 from disnake import AppCmdInter, Role
 
-from services.guilds.service import get_or_create_by_discord_id
+from services.guilds.service import get_or_create_guild
 from services.mysqliup.service import MySqliUp
 from core.base_embeds import InfoEmbed, SuccessEmbed
 from core.embeds import NotEnoughPermissionsEmbed
@@ -28,7 +28,7 @@ class SettingsCog(Cog):
         db = MySqliUp()
         await db.connect()
         await db.begin()
-        guild = await get_or_create_by_discord_id(db, inter.guild_id)
+        guild = await get_or_create_guild(db, inter.guild_id)
         await db.commit()
         await db.close()
         settings_embed = InfoEmbed()
