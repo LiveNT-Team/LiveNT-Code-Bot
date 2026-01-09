@@ -21,7 +21,7 @@ bot = InteractionBot(
 
 @bot.event
 async def on_ready() -> None:
-    logger.info("Bot ready")
+    logger.info("Bot is ready")
 
 
 @bot.event
