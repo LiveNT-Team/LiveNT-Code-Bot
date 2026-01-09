@@ -31,6 +31,8 @@ async def on_slash_command_error(inter: AppCmdInter, error: Exception):
             embed=NotEnoughPermissionsEmbed(),
             ephemeral=True,
         )
+    else:
+        raise error
 
 
 [bot.add_cog(cog) for cog in {SettingsCog()}]
