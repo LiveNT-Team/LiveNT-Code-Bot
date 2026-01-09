@@ -22,7 +22,7 @@ class SettingsCog(Cog):
     async def get(self, inter: AppCmdInter) -> None:
         pass
 
-    @get.sub_command("settings", "Выводит настройки бота для этого сервера")
+    @slash_command(description="Выводит настройки бота для этого сервера")
     @has_developer_role
     async def get_settings(self, inter: AppCmdInter) -> None:
         db = MySqliUp()
@@ -42,7 +42,7 @@ class SettingsCog(Cog):
         )
         await inter.response.send_message(embed=settings_embed, ephemeral=True)
 
-    @set.sub_command("developer_role", "Изменение значения опции")
+    @slash_command("set_developer_role", "Изменение роли разработчика")
     @has_permissions(administrator=True)
     async def set_developer_role(
         self,

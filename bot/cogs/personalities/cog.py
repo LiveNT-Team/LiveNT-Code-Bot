@@ -12,7 +12,7 @@ class PersonalitiesCog(Cog):
     # async def template(self, inter: AppCmdInter) -> None:
     #     pass
 
-    @slash_command()
+    @slash_command(description="Выводит текущею личность ИИ ассистента")
     async def get_ai_personality(self, inter: AppCmdInter) -> None:
         db = MySqliUp()
         await db.connect()
@@ -32,7 +32,7 @@ class PersonalitiesCog(Cog):
             ephemeral=False,
         )
 
-    @slash_command()
+    @slash_command(description="Устанавливает новую личность для ИИ ассистента")
     async def set_ai_personality(
         self,
         inter: AppCmdInter,
@@ -60,7 +60,7 @@ class PersonalitiesCog(Cog):
         await db.close()
         await inter.response.send_message(embed=SuccessEmbed())
 
-    @slash_command()
+    @slash_command(description="Выводит список доступных личностей для ИИ бота")
     async def get_personalities(self, inter: AppCmdInter) -> None:
         embed = InfoEmbed(description="Информация о доступных личностях чат ассистента")
         for name, personality in PERSONALITIES.items():
