@@ -6,6 +6,3 @@ class Personality(TypedDict):
     description: str
     temperature: float
     max_tokens: int
-
-
-__all__ = ("Personality",)
