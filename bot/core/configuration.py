@@ -9,12 +9,10 @@ from os import getenv
 from typing import Literal
 from pathlib import Path
 
-from .typed_dicts import Personality
+from .models.personality import Personality
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-IS_DEV_MODE = getenv("IS_DEV_MODE").lower() == "yes"
 
 LOGGING_FILENAME = BASE_DIR / "logs/logs.log"
 LOGGING_FILEMODE: Literal["w", "a"] = "w"
