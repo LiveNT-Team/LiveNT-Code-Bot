@@ -1,9 +1,9 @@
 from disnake.ext.commands import Cog, Param, slash_command, has_permissions
 from disnake import AppCmdInter, Role, TextChannel
 
-from ...core.database import session_factory
+from ...services.guilds_settings import GuildSettingsService
+from ...services.mysqliup import MySqliUp
 from ...core.embeds import TheCommandDoesNotSupportDMEmbed, NotEnoughPermissionsEmbed
-from ...services.guilds_settings import get_or_create_guild_settings
 from .embeds import (
     AIChannelSetEmbed,
     AIDisabledEmbed,
@@ -137,14 +137,24 @@ class SettingsCog(Cog):
     )
     async def enable_greetings(self, inter: AppCmdInter) -> None:
         if inter.guild:
-            async with session_factory() as session:
-                guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
-                if inter.author.guild_permissions.administrator or inter.guild.get_role(guild_settings.developer_role_id) in inter.author.roles:
-                    guild_settings.is_greetings_enabled = True
-                    await session.commit()
+            db = MySqliUp()
+            await db.connect()
+            try:
+                service = GuildSettingsService(db)
+                guild_settings = await service.get_or_create(inter.guild.id)
+
+                developer_role_id = guild_settings.get("developer_role_id")
+                has_permission = inter.author.guild_permissions.administrator or (
+                    developer_role_id and inter.guild.get_role(developer_role_id) in inter.author.roles
+                )
+
+                if has_permission:
+                    await service.enable_greetings(inter.guild.id)
                     await inter.response.send_message(embed=GreetingsEnabledEmbed())
                 else:
                     await inter.response.send_message(embed=NotEnoughPermissionsEmbed(), ephemeral=True)
+            finally:
+                await db.close()
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
@@ -154,14 +164,24 @@ class SettingsCog(Cog):
     )
     async def disable_greetings(self, inter: AppCmdInter) -> None:
         if inter.guild:
-            async with session_factory() as session:
-                guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
-                if inter.author.guild_permissions.administrator or inter.guild.get_role(guild_settings.developer_role_id) in inter.author.roles:
-                    guild_settings.is_greetings_enabled = False
-                    await session.commit()
+            db = MySqliUp()
+            await db.connect()
+            try:
+                service = GuildSettingsService(db)
+                guild_settings = await service.get_or_create(inter.guild.id)
+
+                developer_role_id = guild_settings.get("developer_role_id")
+                has_permission = inter.author.guild_permissions.administrator or (
+                    developer_role_id and inter.guild.get_role(developer_role_id) in inter.author.roles
+                )
+
+                if has_permission:
+                    await service.disable_greetings(inter.guild.id)
                     await inter.response.send_message(embed=GreetingsDisabledEmbed())
                 else:
                     await inter.response.send_message(embed=NotEnoughPermissionsEmbed(), ephemeral=True)
+            finally:
+                await db.close()
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 
@@ -175,14 +195,24 @@ class SettingsCog(Cog):
         channel: TextChannel,
     ) -> None:
         if inter.guild:
-            async with session_factory() as session:
-                guild_settings = await get_or_create_guild_settings(session, guild_id=inter.guild.id)
-                if inter.author.guild_permissions.administrator or inter.guild.get_role(guild_settings.developer_role_id) in inter.author.roles:
-                    guild_settings.greetings_channel_id = channel.id
-                    await session.commit()
+            db = MySqliUp()
+            await db.connect()
+            try:
+                service = GuildSettingsService(db)
+                guild_settings = await service.get_or_create(inter.guild.id)
+
+                developer_role_id = guild_settings.get("developer_role_id")
+                has_permission = inter.author.guild_permissions.administrator or (
+                    developer_role_id and inter.guild.get_role(developer_role_id) in inter.author.roles
+                )
+
+                if has_permission:
+                    await service.set_greetings_channel(inter.guild.id, channel.id)
                     await inter.response.send_message(embed=GreetingsChannelSetEmbed(channel=channel))
                 else:
                     await inter.response.send_message(embed=NotEnoughPermissionsEmbed(), ephemeral=True)
+            finally:
+                await db.close()
         else:
             await inter.response.send_message(embed=TheCommandDoesNotSupportDMEmbed(), ephemeral=True)
 

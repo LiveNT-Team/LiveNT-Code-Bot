@@ -1,7 +1,8 @@
 from disnake.ext.commands import Cog, CommandError, MissingPermissions, InteractionBot
 from disnake import AppCmdInter, Member, Message
 
-from ...services.guilds_settings import get_or_create_guild_settings
+from ...services.guilds_settings import GuildSettingsService
+from ...services.mysqliup import MySqliUp
 from ...services.users import get_or_create_user
 from ...services.prompts import get_greetings_text
 from ...core.database import session_factory
@@ -34,15 +35,20 @@ class EventsHandlerCog(Cog):
 
     @Cog.listener()
     async def on_member_join(self, member: Member) -> None:
-        async with session_factory() as session:
-            guild_settings = await get_or_create_guild_settings(
-                session, guild_id=member.guild.id
-            )
-            if guild_settings.is_greetings_enabled:
-                if greetings_channel := member.guild.get_channel(
-                    guild_settings.greetings_channel_id
-                ):
+        db = MySqliUp()
+        await db.connect()
+        try:
+            service = GuildSettingsService(db)
+            guild_settings = await service.get_or_create(member.guild.id)
+
+            if guild_settings.get("is_greetings_enabled"):
+                greetings_channel_id = guild_settings.get("greetings_channel_id")
+                if greetings_channel := member.guild.get_channel(greetings_channel_id):
                     await greetings_channel.send(await get_greetings_text(member))
+        except Exception as e:
+            logger.error(f"Error in on_member_join: {e}")
+        finally:
+            await db.close()
 
     @Cog.listener()
     async def on_message(self, message: Message):
