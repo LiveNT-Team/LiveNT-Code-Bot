@@ -1,24 +1,14 @@
-import asyncio
-from disnake.ext.commands import InteractionBot, CommandSyncFlags
-from disnake import Intents
+from disnake.ext.commands import InteractionBot, CommandSyncFlags, MissingPermissions
+from disnake import Intents, AppCmdInter
 
-from core.configuration import BOT_TOKEN
 from services.mysqliup import MySqliUp
 from services.guilds_settings import init_guild_settings
+
+from core.configuration import BOT_TOKEN
+from core.embeds import NotEnoughPermissionsEmbed
+from cogs.settings.cog import SettingsCog
+from cogs.personalities.cog import PersonalitiesCog
 from core.logger import logger
-
-
-async def setup_database():
-    """Инициализировать базу данных и сервис guild_settings"""
-    try:
-        db = MySqliUp()
-        await db.connect()
-        await init_guild_settings(db)
-        logger.info("Database and guild_settings service initialized successfully")
-    except Exception as e:
-        logger.error(f"Failed to initialize database: {e}")
-        raise
-
 
 bot = InteractionBot(
     intents=Intents(
@@ -32,33 +22,36 @@ bot = InteractionBot(
     ),
 )
 
+async def setup_database():
+    try:
+        db = MySqliUp()
+        await db.connect()
+        await init_guild_settings(db)
+    except Exception as error:
+        raise error
 
 @bot.event
-async def on_ready():
-    """Событие готовности бота"""
-    logger.info(f"Bot logged in as {bot.user}")
-    await setup_database()
-
-
-# Загружаем коги вручную
-async def load_cogs():
-    """Загрузить все коги"""
-    from cogs.settings.cog import SettingsCog
-    from cogs.events_handler.cog import EventsHandlerCog
-    from cogs.ai.cog import AICog
-    from cogs.stats.cog import StatsCog
-
-    bot.add_cog(SettingsCog())
-    bot.add_cog(EventsHandlerCog(bot))
-    bot.add_cog(AICog(bot))
-    bot.add_cog(StatsCog(bot))
-    logger.info("Cogs loaded successfully")
+async def on_ready() -> None:
+    logger.info("Bot is ready")
+	await setup_database()
 
 
 @bot.event
-async def on_connect():
-    """Загрузить коги при подключении"""
-    await load_cogs()
+async def on_slash_command_error(inter: AppCmdInter, error: Exception):
+    if isinstance(error, MissingPermissions):
+        await inter.response.send_message(
+            embed=NotEnoughPermissionsEmbed(),
+            ephemeral=True,
+        )
+    else:
+        raise error
+
+
+[bot.add_cog(cog) for cog in {SettingsCog(), PersonalitiesCog()}]
 
 
 bot.run(BOT_TOKEN)
+
+
+
+
