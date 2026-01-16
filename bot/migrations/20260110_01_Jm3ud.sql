@@ -1,0 +1,12 @@
+-- 
+-- depends: 20260109_02_5su4a
+
+ALTER TABLE guilds
+ADD COLUMN main_admin_role_id BIGINT UNSIGNED NULL,
+ADD COLUMN admin_role_id BIGINT UNSIGNED NULL,
+ADD COLUMN major_admin_role_id BIGINT UNSIGNED NULL,
+ADD COLUMN minor_admin_role_id BIGINT UNSIGNED NULL,
+ADD COLUMN main_moder_role_id BIGINT UNSIGNED NULL;
+ADD COLUMN moder_role_id BIGINT UNSIGNED NULL;
+ADD COLUMN major_moder_role_id BIGINT UNSIGNED NULL;
+ADD COLUMN minor_moder_role_id BIGINT UNSIGNED NULL;
