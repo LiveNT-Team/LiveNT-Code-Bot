@@ -1,16 +1,10 @@
 from disnake.ext.commands import Cog, Param, slash_command, has_permissions
 from disnake import AppCmdInter, Role, TextChannel
 
-from services.guilds.service import get_or_create_guild
+from services.guilds.service import get_or_create_guild, set_guild_setting
 from services.mysqliup.service import MySqliUp
 from core.base_embeds import InfoEmbed, SuccessEmbed
 from core.embeds import NotEnoughPermissionsEmbed
-from services.guilds_settings.service import (
-	set_guild_settings_option,
-	enable_greetings,
-	disable_greetings,
-	set_greetings_channel,
-)
 from .decorators import has_developer_role
 
 
@@ -78,11 +72,11 @@ class SettingsCog(Cog):
 		db = MySqliUp()
 		await db.connect()
 		await db.begin()
-		await set_guild_settings_option(
+		await set_guild_setting(
 			db,
+			inter.guild_id,
 			"developer_role_id",
 			new_role.id if new_role else None,
-			inter.guild_id,
 		)
 		await db.commit()
 		await db.close()
@@ -96,7 +90,7 @@ class SettingsCog(Cog):
 		db = MySqliUp()
 		await db.connect()
 		await db.begin()
-		await enable_greetings(db, inter.guild_id)
+		await set_guild_setting(db, inter.guild_id, "greetings_enabled", True)
 		await db.commit()
 		await db.close()
 		await inter.response.send_message(embed=SuccessEmbed())
@@ -109,7 +103,7 @@ class SettingsCog(Cog):
 		db = MySqliUp()
 		await db.connect()
 		await db.begin()
-		await disable_greetings(db, inter.guild_id)
+		await set_guild_setting(db, inter.guild_id, "greetings_enabled", False)
 		await db.commit()
 		await db.close()
 		await inter.response.send_message(embed=SuccessEmbed())
@@ -129,7 +123,7 @@ class SettingsCog(Cog):
 		db = MySqliUp()
 		await db.connect()
 		await db.begin()
-		await set_greetings_channel(db, inter.guild_id, channel.id if channel else None)
+		await set_guild_setting(db, inter.guild_id, "greetings_channel_id", channel.id if channel else None)
 		await db.commit()
 		await db.close()
 		await inter.response.send_message(embed=SuccessEmbed())

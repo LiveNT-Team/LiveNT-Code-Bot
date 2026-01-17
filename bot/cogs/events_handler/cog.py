@@ -1,4 +1,4 @@
-from disnake.ext.commands import Cog
+from disnake.ext.commands import Cog, InteractionBot
 from disnake import Member
 
 from services.mysqliup.service import MySqliUp
@@ -7,7 +7,7 @@ from services.prompts.service import get_greetings_text
 
 
 class EventsHandlerCog(Cog):
-	def __init__(self, bot):
+	def __init__(self, bot: InteractionBot):
 		self.bot = bot
 
 	@Cog.listener()
