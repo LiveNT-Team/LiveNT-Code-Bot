@@ -1,3 +1,4 @@
+from typing import Any
 from core.models.guild import Guild
 from services.mysqliup import MySqliUp
 
@@ -35,3 +36,13 @@ async def get_or_create_guild(db: MySqliUp, gid: int) -> Guild:
         return guild
     else:
         raise ValueError("theaihopgg что за х***я")
+
+
+async def set_guild_setting(db: MySqliUp, gid: int, name: str, value: Any) -> None:
+    await get_or_create_guild(db, gid)
+    await db.update_row(
+        "guilds",
+        {name: value},
+        where="discord_gid = %s",
+        where_params=(gid,),
+    )
