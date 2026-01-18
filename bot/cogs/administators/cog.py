@@ -31,7 +31,7 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        await set_special_role(role, "admin_role_id")
+        await set_special_role(role, "admin_role_id", inter.guild_id)
         await inter.response.send_message(embed=SuccessEmbed())
 
     @slash_command()
@@ -41,7 +41,7 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        await set_special_role(role, "main_admin_role_id")
+        await set_special_role(role, "main_admin_role_id", inter.guild_id)
         await inter.response.send_message(embed=SuccessEmbed())
 
     @slash_command()
@@ -51,7 +51,7 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        await set_special_role(role, "major_admin_role_id")
+        await set_special_role(role, "major_admin_role_id", inter.guild_id)
         await inter.response.send_message(embed=SuccessEmbed())
 
     @slash_command()
@@ -61,7 +61,7 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        await set_special_role(role, "minor_admin_role_id")
+        await set_special_role(role, "minor_admin_role_id", inter.guild_id)
         await inter.response.send_message(embed=SuccessEmbed())
 
     @slash_command()
@@ -71,7 +71,7 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        await set_special_role(role, "moder_role_id")
+        await set_special_role(role, "moder_role_id", inter.guild_id)
         await inter.response.send_message(embed=SuccessEmbed())
 
     @slash_command()
@@ -81,7 +81,7 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        await set_special_role(role, "main_moder_role_id")
+        await set_special_role(role, "main_moder_role_id", inter.guild_id)
         await inter.response.send_message(embed=SuccessEmbed())
 
     @slash_command()
@@ -91,7 +91,7 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        await set_special_role(role, "major_moder_role_id")
+        await set_special_role(role, "major_moder_role_id", inter.guild_id)
         await inter.response.send_message(embed=SuccessEmbed())
 
     @slash_command()
@@ -101,7 +101,7 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        await set_special_role(role, "minor_moder_role_id")
+        await set_special_role(role, "minor_moder_role_id", inter.guild_id)
         await inter.response.send_message(embed=SuccessEmbed())
 
 
