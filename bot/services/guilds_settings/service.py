@@ -12,7 +12,7 @@ async def set_guild_settings_option(
     await get_or_create_guild(db, gid=gid)
     await db.update_row(
         "guilds",
-        {"developer_role_id": value},
+        {name: value},
         where="discord_gid = %s",
         where_params=(gid,),
     )

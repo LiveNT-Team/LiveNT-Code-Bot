@@ -8,7 +8,20 @@ from services.guilds.service import get_or_create_guild
 from services.mysqliup.service import MySqliUp
 
 
-async def set_tole1
+async def set_special_role(role: Role | None, field_name: str, gid: int) -> None:
+    db = MySqliUp()
+    await db.connect()
+    await db.begin()
+    await get_or_create_guild(db, gid)
+    await set_guild_settings_option(
+        db,
+        field_name,
+        role.id if role else None,
+        gid=gid,
+    )
+    await db.commit()
+    await db.close()
+
 
 class AdministratorsCog(Cog):
     @slash_command()
@@ -18,50 +31,78 @@ class AdministratorsCog(Cog):
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        db = MySqliUp()
-        await db.connect()
-        await db.begin()
-        await get_or_create_guild(db, inter.guild_id)
-        await set_guild_settings_option(
-            db,
-            "admin_role_id",
-            role.id if role else None,
-            gid=inter.guild_id,
-        )
-        await db.commit()
-        await db.close()
+        await set_special_role(role, "admin_role_id")
         await inter.response.send_message(embed=SuccessEmbed())
-    
+
     @slash_command()
     @has_developer_role
-    async def set_admin_role(
+    async def set_main_admin_role(
         self,
         inter: AppCmdInter,
         role: Role | None = None,
     ) -> None:
-        db = MySqliUp()
-        await db.connect()
-        await db.begin()
-        await get_or_create_guild(db, inter.guild_id)
-        await set_guild_settings_option(
-            db,
-            "main_admin_role_id",
-            role.id if role else None,
-            gid=inter.guild_id,
-        )
-        await db.commit()
-        await db.close()
+        await set_special_role(role, "main_admin_role_id")
         await inter.response.send_message(embed=SuccessEmbed())
 
+    @slash_command()
+    @has_developer_role
+    async def set_major_admin_role(
+        self,
+        inter: AppCmdInter,
+        role: Role | None = None,
+    ) -> None:
+        await set_special_role(role, "major_admin_role_id")
+        await inter.response.send_message(embed=SuccessEmbed())
 
-"",
-"",
-"major_admin_role_id",
-"minor_admin_role_id",
-"main_moder_role_id",
-"moder_role_id",
-"major_moder_role_id",
-"minor_moder_role_id",
+    @slash_command()
+    @has_developer_role
+    async def set_minor_admin_role(
+        self,
+        inter: AppCmdInter,
+        role: Role | None = None,
+    ) -> None:
+        await set_special_role(role, "minor_admin_role_id")
+        await inter.response.send_message(embed=SuccessEmbed())
+
+    @slash_command()
+    @has_developer_role
+    async def set_moder_role(
+        self,
+        inter: AppCmdInter,
+        role: Role | None = None,
+    ) -> None:
+        await set_special_role(role, "moder_role_id")
+        await inter.response.send_message(embed=SuccessEmbed())
+
+    @slash_command()
+    @has_developer_role
+    async def set_main_moder_role(
+        self,
+        inter: AppCmdInter,
+        role: Role | None = None,
+    ) -> None:
+        await set_special_role(role, "main_moder_role_id")
+        await inter.response.send_message(embed=SuccessEmbed())
+
+    @slash_command()
+    @has_developer_role
+    async def set_major_moder_role(
+        self,
+        inter: AppCmdInter,
+        role: Role | None = None,
+    ) -> None:
+        await set_special_role(role, "major_moder_role_id")
+        await inter.response.send_message(embed=SuccessEmbed())
+
+    @slash_command()
+    @has_developer_role
+    async def set_minor_moder_role(
+        self,
+        inter: AppCmdInter,
+        role: Role | None = None,
+    ) -> None:
+        await set_special_role(role, "minor_moder_role_id")
+        await inter.response.send_message(embed=SuccessEmbed())
 
 
 __all__ = ("AdministratorsCog",)
