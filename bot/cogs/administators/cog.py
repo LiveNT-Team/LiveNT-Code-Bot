@@ -1,10 +1,9 @@
-from disnake.ext.commands import Cog, Param, slash_command
+from disnake.ext.commands import Cog, slash_command
 from disnake import AppCmdInter, Role
 
 from cogs.settings.decorators import has_developer_role
 from core.base_embeds import SuccessEmbed
-from services.guilds_settings.service import set_guild_settings_option
-from services.guilds.service import get_or_create_guild
+from services.guilds.service import get_or_create_guild, set_guild_setting
 from services.mysqliup.service import MySqliUp
 
 
@@ -13,7 +12,7 @@ async def set_special_role(role: Role | None, field_name: str, gid: int) -> None
     await db.connect()
     await db.begin()
     await get_or_create_guild(db, gid)
-    await set_guild_settings_option(
+    await set_guild_setting(
         db,
         field_name,
         role.id if role else None,
