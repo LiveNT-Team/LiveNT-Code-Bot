@@ -39,10 +39,83 @@ class SettingsCog(Cog):
                 if guild["developer_role_id"]
                 else "Не задана"
             ),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Роль главного администратора",
+            (
+                f"<@&{guild["main_admin_role_id"]}>"
+                if guild["main_admin_role_id"]
+                else "Не задана"
+            ),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Роль старшего администратора",
+            (
+                f"<@&{guild["major_admin_role_id"]}>"
+                if guild["major_admin_role_id"]
+                else "Не задана"
+            ),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Роль администратора",
+            (
+                f"<@&{guild["admin_role_id"]}>"
+                if guild["admin_role_id"]
+                else "Не задана"
+            ),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Роль младшего администратора",
+            (
+                f"<@&{guild["minor_admin_role_id"]}>"
+                if guild["minor_admin_role_id"]
+                else "Не задана"
+            ),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Роль главного модератора",
+            (
+                f"<@&{guild["main_moder_role_id"]}>"
+                if guild["main_moder_role_id"]
+                else "Не задана"
+            ),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Роль старшего модератора",
+            (
+                f"<@&{guild["major_moder_role_id"]}>"
+                if guild["major_moder_role_id"]
+                else "Не задана"
+            ),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Роль модератора",
+            (
+                f"<@&{guild["moder_role_id"]}>"
+                if guild["moder_role_id"]
+                else "Не задана"
+            ),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Роль младшего модератора",
+            (
+                f"<@&{guild["minor_moder_role_id"]}>"
+                if guild["minor_moder_role_id"]
+                else "Не задана"
+            ),
+            inline=False,
         )
         await inter.response.send_message(embed=settings_embed, ephemeral=True)
 
-    @slash_command("set_developer_role", "Изменение роли разработчика")
+    @slash_command(name="set_developer_role", description="Изменение роли разработчика")
     @has_permissions(administrator=True)
     async def set_developer_role(
         self,
