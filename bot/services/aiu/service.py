@@ -1,7 +1,12 @@
 import httpx
 import base64
 
-from ...core.configuration import PERSONALITIES, AI_API_KEY, AI_API_URL, DEFAULT_PERSONALITY_NAME
+from ...core.configuration import (
+    PERSONALITIES,
+    AI_API_KEY,
+    AI_API_URL,
+    DEFAULT_PERSONALITY_NAME,
+)
 from ...core.typed_dicts import Personality
 
 
@@ -22,12 +27,17 @@ async def send_ai_request(
     ]
 
     async with httpx.AsyncClient() as httpx_client:
-        if image_url and (image_url.startswith("http://") or image_url.startswith("https://")):
+        if image_url and (
+            image_url.startswith("http://") or image_url.startswith("https://")
+        ):
             try:
                 response = await httpx_client.get(image_url, timeout=30)
-                if response.status_code == 200 and len(response.content) <= 10 * 1024 * 1024:
+                if (
+                    response.status_code == 200
+                    and len(response.content) <= 10 * 1024 * 1024
+                ):
                     data = base64.b64encode(response.content).decode("utf-8")
-                    ext = image_url.split(".")[-1].lower().split("?")[0] 
+                    ext = image_url.split(".")[-1].lower().split("?")[0]
                     mime = {"png": "image/png", "webp": "image/webp"}.get(
                         ext,
                         "image/jpeg",
@@ -52,7 +62,12 @@ async def send_ai_request(
         )
     match response.status_code:
         case 200:
-            return response.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+            return (
+                response.json()
+                .get("choices", [{}])[0]
+                .get("message", {})
+                .get("content", "")
+            )
         case _:
             return None
 

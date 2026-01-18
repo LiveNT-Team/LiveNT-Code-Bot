@@ -11,7 +11,6 @@ from pathlib import Path
 
 from .models.personality import Personality
 
-
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 LOGGING_FILENAME = BASE_DIR / "logs/logs.log"
