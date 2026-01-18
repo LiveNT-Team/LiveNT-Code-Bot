@@ -5,6 +5,7 @@ from core.configuration import BOT_TOKEN
 from core.embeds import NotEnoughPermissionsEmbed
 from cogs.settings.cog import SettingsCog
 from cogs.personalities.cog import PersonalitiesCog
+from cogs.administators.cog import AdministratorsCog
 from core.logger import logger
 
 bot = InteractionBot(
@@ -36,7 +37,14 @@ async def on_slash_command_error(inter: AppCmdInter, error: Exception):
         raise error
 
 
-[bot.add_cog(cog) for cog in {SettingsCog(), PersonalitiesCog()}]
+[
+    bot.add_cog(cog)
+    for cog in {
+        SettingsCog(),
+        PersonalitiesCog(),
+        AdministratorsCog(),
+    }
+]
 
 
 bot.run(BOT_TOKEN)
