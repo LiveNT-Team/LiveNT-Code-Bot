@@ -5,7 +5,7 @@ from core.configuration import BOT_TOKEN
 from core.embeds import NotEnoughPermissionsEmbed
 from cogs.settings.cog import SettingsCog
 from cogs.personalities.cog import PersonalitiesCog
-from cogs.administators.cog import AdministratorsCog
+from cogs.administrators.cog import AdministratorsCog
 from cogs.events_handler.cog import EventsHandlerCog
 from core.logger import logger
 
