@@ -36,7 +36,7 @@ class GreetingsCog(Cog):
 
     @slash_command(description="Включить приветствия")
     @has_permissions(administrator=True)
-    async def greetings(self, inter: AppCmdInter) -> None:
+    async def enable_greetings(self, inter: AppCmdInter) -> None:
         if not inter.author.guild_permissions.administrator:
             return await inter.response.send_message(embed=NotEnoughPermissionsEmbed())
         db = MySqliUp()
@@ -52,10 +52,7 @@ class GreetingsCog(Cog):
         await db.close()
         await inter.response.send_message(embed=SuccessEmbed())
 
-    @slash_command(
-        name="greetings",
-        description="Выключить приветствия",
-    )
+    @slash_command(description="Выключить приветствия")
     @has_permissions(administrator=True)
     async def disable_greetings(self, inter: AppCmdInter) -> None:
         if not inter.author.guild_permissions.administrator:
@@ -73,10 +70,7 @@ class GreetingsCog(Cog):
         await db.close()
         await inter.response.send_message(embed=SuccessEmbed())
 
-    @slash_command(
-        name="greetings_channel",
-        description="Установить канал для приветствий",
-    )
+    @slash_command(description="Установить канал для приветствий")
     @has_permissions(administrator=True)
     async def set_greetings_channel(
         self,

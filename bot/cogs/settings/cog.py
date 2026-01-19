@@ -114,7 +114,7 @@ class SettingsCog(Cog):
         )
         await inter.response.send_message(embed=settings_embed, ephemeral=True)
 
-    @slash_command("set_developer_role", "Изменение роли разработчика")
+    @slash_command(name="set_developer_role", description="Изменение роли разработчика")
     @has_permissions(administrator=True)
     async def set_developer_role(
         self,
