@@ -5,36 +5,10 @@ from services.guilds.service import get_or_create_guild, set_guild_setting
 from services.mysqliup.service import MySqliUp
 from core.base_embeds import InfoEmbed, SuccessEmbed
 from core.embeds import NotEnoughPermissionsEmbed
-from services.guilds_settings.service import (
-    set_guild_settings_option,
-    enable_greetings,
-    disable_greetings,
-    set_greetings_channel,
-)
 from .decorators import has_developer_role
 
 
 class SettingsCog(Cog):
-    @slash_command()
-    async def set(self, inter: AppCmdInter) -> None:
-        pass
-
-    @slash_command()
-    async def get(self, inter: AppCmdInter) -> None:
-        pass
-
-    @slash_command()
-    async def enable(self, inter: AppCmdInter) -> None:
-        pass
-
-    @slash_command()
-    async def disable(self, inter: AppCmdInter) -> None:
-        pass
-
-    @slash_command()
-    async def disable(self, inter: AppCmdInter) -> None:
-        pass
-
     @slash_command(description="Выводит настройки бота для этого сервера")
     @has_developer_role
     async def get_settings(self, inter: AppCmdInter) -> None:
@@ -160,56 +134,6 @@ class SettingsCog(Cog):
             inter.guild_id,
             "developer_role_id",
             new_role.id if new_role else None,
-        )
-        await db.commit()
-        await db.close()
-        await inter.response.send_message(embed=SuccessEmbed())
-
-    @enable.sub_command(description="Включить приветствия")
-    @has_permissions(administrator=True)
-    async def greetings(self, inter: AppCmdInter) -> None:
-        if not inter.author.guild_permissions.administrator:
-            return await inter.response.send_message(embed=NotEnoughPermissionsEmbed())
-        db = MySqliUp()
-        await db.connect()
-        await db.begin()
-        await set_guild_setting(db, inter.guild_id, "greetings_enabled", True)
-        await db.commit()
-        await db.close()
-        await inter.response.send_message(embed=SuccessEmbed())
-
-    @disable.sub_command(name="greetings", description="Выключить приветствия")
-    @has_permissions(administrator=True)
-    async def disable_greetings(self, inter: AppCmdInter) -> None:
-        if not inter.author.guild_permissions.administrator:
-            return await inter.response.send_message(embed=NotEnoughPermissionsEmbed())
-        db = MySqliUp()
-        await db.connect()
-        await db.begin()
-        await set_guild_setting(db, inter.guild_id, "greetings_enabled", False)
-        await db.commit()
-        await db.close()
-        await inter.response.send_message(embed=SuccessEmbed())
-
-    @set.sub_command(
-        name="greetings_channel", description="Установить канал для приветствий"
-    )
-    @has_permissions(administrator=True)
-    async def set_greetings_channel(
-        self,
-        inter: AppCmdInter,
-        channel: TextChannel | None = Param(
-            None,
-            description="Канал для приветствий. Если пустое - сбросить",
-        ),
-    ) -> None:
-        if not inter.author.guild_permissions.administrator:
-            return await inter.response.send_message(embed=NotEnoughPermissionsEmbed())
-        db = MySqliUp()
-        await db.connect()
-        await db.begin()
-        await set_guild_setting(
-            db, inter.guild_id, "greetings_channel_id", channel.id if channel else None
         )
         await db.commit()
         await db.close()

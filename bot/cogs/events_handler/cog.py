@@ -1,33 +1,27 @@
-from disnake.ext.commands import Cog, InteractionBot
-from disnake import Member
+from disnake.ext.commands import Cog, InteractionBot, MissingPermissions
+from disnake import AppCmdInter, Member
 
+from core.logger import logger
+from core.embeds import NotEnoughPermissionsEmbed
 from services.mysqliup.service import MySqliUp
 from services.guilds.service import get_guild
 from services.prompts.service import get_greetings_text
 
 
 class EventsHandlerCog(Cog):
-    def __init__(self, bot: InteractionBot):
-        self.bot = bot
+    @Cog.listener()
+    async def on_ready() -> None:
+        logger.info("Bot is ready")
 
     @Cog.listener()
-    async def on_member_join(self, member: Member) -> None:
-        db = MySqliUp()
-        await db.connect()
-        guild = await get_guild(db, member.guild.id)
-        await db.close()
-        if not guild:
-            return
-        if not guild["greetings_enabled"]:
-            return
-        if not guild["greetings_channel_id"]:
-            return
-        channel = self.bot.get_channel(guild["greetings_channel_id"])
-        if not channel:
-            return
-        text = await get_greetings_text(member)
-        if text:
-            await channel.send(text)
+    async def on_slash_command_error(inter: AppCmdInter, error: Exception):
+        if isinstance(error, MissingPermissions):
+            await inter.response.send_message(
+                embed=NotEnoughPermissionsEmbed(),
+                ephemeral=True,
+            )
+        else:
+            raise error
 
 
 __all__ = ("EventsHandlerCog",)

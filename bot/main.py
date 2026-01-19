@@ -1,13 +1,12 @@
-from disnake.ext.commands import InteractionBot, CommandSyncFlags, MissingPermissions
-from disnake import Intents, AppCmdInter
+from disnake.ext.commands import InteractionBot, CommandSyncFlags
+from disnake import Intents
 
 from core.configuration import BOT_TOKEN
-from core.embeds import NotEnoughPermissionsEmbed
 from cogs.settings.cog import SettingsCog
 from cogs.personalities.cog import PersonalitiesCog
 from cogs.administrators.cog import AdministratorsCog
 from cogs.events_handler.cog import EventsHandlerCog
-from core.logger import logger
+from cogs.greetings.cog import GreetingsCog
 
 bot = InteractionBot(
     intents=Intents(
@@ -22,29 +21,14 @@ bot = InteractionBot(
 )
 
 
-@bot.event
-async def on_ready() -> None:
-    logger.info("Bot is ready")
-
-
-@bot.event
-async def on_slash_command_error(inter: AppCmdInter, error: Exception):
-    if isinstance(error, MissingPermissions):
-        await inter.response.send_message(
-            embed=NotEnoughPermissionsEmbed(),
-            ephemeral=True,
-        )
-    else:
-        raise error
-
-
 [
     bot.add_cog(cog)
     for cog in {
         SettingsCog(),
         PersonalitiesCog(),
-        EventsHandlerCog(bot),
+        EventsHandlerCog(),
         AdministratorsCog(),
+        GreetingsCog(),
     }
 ]
 
