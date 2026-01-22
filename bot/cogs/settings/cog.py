@@ -112,6 +112,26 @@ class SettingsCog(Cog):
                 else "Не задан"
             ),
         )
+        settings_embed.add_field(
+            "Система активиста",
+            "Включена" if guild["activist_enabled"] else "Выключена",
+        )
+        settings_embed.add_field(
+            "Роль активиста",
+            (
+                f"<@&{guild['activist_role_id']}>"
+                if guild["activist_role_id"]
+                else "Не задана"
+            ),
+        )
+        settings_embed.add_field(
+            "Сообщений для активиста",
+            (
+                str(guild["activist_messages_count"])
+                if guild["activist_messages_count"]
+                else "Не задано"
+            ),
+        )
         await inter.response.send_message(embed=settings_embed, ephemeral=True)
 
     @slash_command(name="set_developer_role", description="Изменение роли разработчика")
@@ -135,6 +155,62 @@ class SettingsCog(Cog):
             "developer_role_id",
             new_role.id if new_role else None,
         )
+        await db.commit()
+        await db.close()
+        await inter.response.send_message(embed=SuccessEmbed())
+
+    @slash_command(
+        name="set_activist_enabled",
+        description="Включение/выключение системы активиста",
+    )
+    @has_developer_role
+    async def set_activist_enabled(
+        self,
+        inter: AppCmdInter,
+        enabled: bool = Param(description="Включить или выключить систему"),
+    ) -> None:
+        db = MySqliUp()
+        await db.connect()
+        await db.begin()
+        await set_guild_setting(db, inter.guild_id, "activist_enabled", enabled)
+        await db.commit()
+        await db.close()
+        await inter.response.send_message(embed=SuccessEmbed())
+
+    @slash_command(name="set_activist_role", description="Изменение роли активиста")
+    @has_developer_role
+    async def set_activist_role(
+        self,
+        inter: AppCmdInter,
+        new_role: Role | None = Param(None, description="Роль активиста"),
+    ) -> None:
+        db = MySqliUp()
+        await db.connect()
+        await db.begin()
+        await set_guild_setting(
+            db,
+            inter.guild_id,
+            "activist_role_id",
+            new_role.id if new_role else None,
+        )
+        await db.commit()
+        await db.close()
+        await inter.response.send_message(embed=SuccessEmbed())
+
+    @slash_command(
+        name="set_activist_messages",
+        description="Изменение количества сообщений для получения роли активиста",
+    )
+    @has_developer_role
+    async def set_activist_messages(
+        self,
+        inter: AppCmdInter,
+        count: int = Param(description="Количество сообщений"),
+    ) -> None:
+        db = MySqliUp()
+        await db.connect()
+        await db.begin()
+        await set_guild_setting(db, inter.guild_id, "activist_messages_count", count)
         await db.commit()
         await db.close()
         await inter.response.send_message(embed=SuccessEmbed())

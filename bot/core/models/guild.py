@@ -15,3 +15,6 @@ class Guild(TypedDict):
     minor_moder_role_id: int
     greetings_enabled: bool
     greetings_channel_id: int
+    activist_enabled: bool
+    activist_role_id: int
+    activist_messages_count: int
