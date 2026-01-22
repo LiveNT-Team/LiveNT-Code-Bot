@@ -30,7 +30,7 @@ bot = InteractionBot(
         EventsHandlerCog(),
         AdministratorsCog(),
         GreetingsCog(),
-        AIChat(),
+        AIChat(bot=bot),
     }
 ]
 
