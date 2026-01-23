@@ -17,3 +17,6 @@ class Guild(TypedDict):
     greetings_channel_id: int
     ai_chat_enabled: bool
     ai_channel_id: int
+    activist_enabled: bool
+    activist_role_id: int
+    activist_messages_count: int

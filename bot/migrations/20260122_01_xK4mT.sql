@@ -1,0 +1,10 @@
+--
+-- depends: 20260118_01_pscu9
+
+ALTER TABLE users
+ADD COLUMN messages_count INT UNSIGNED DEFAULT 0;
+
+ALTER TABLE guilds
+ADD COLUMN activist_enabled BOOLEAN DEFAULT FALSE,
+ADD COLUMN activist_role_id BIGINT UNSIGNED NULL,
+ADD COLUMN activist_messages_count INT UNSIGNED DEFAULT 0;

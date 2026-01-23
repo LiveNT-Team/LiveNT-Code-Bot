@@ -6,3 +6,4 @@ class User(TypedDict):
     discord_gid: int
     discord_uid: int
     ai_per_name: str
+    messages_count: int
