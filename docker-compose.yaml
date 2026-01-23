@@ -4,7 +4,7 @@ services:
       dockerfile: ./Dockerfile
       context: ./bot
     ports:
-      - 1111:1111
+      - ${DEBUGPY_PORT}:${DEBUGPY_PORT}
     environment:
       - DEBUG=${DEBUG}
       - BOT_TOKEN=${BOT_TOKEN}

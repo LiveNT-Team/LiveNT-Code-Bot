@@ -1,0 +1,21 @@
+services:
+  bot:
+    build:
+      dockerfile: ./Dockerfile
+      context: ./bot
+    ports:
+      - ${DEBUGPY_PORT}:${DEBUGPY_PORT}
+    environment:
+      - DEBUG=${DEBUG}
+      - BOT_TOKEN=${BOT_TOKEN}
+      - AI_API_URL=${AI_API_URL}
+      - AI_API_KEY=${AI_API_KEY}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - PYDEVD_DISABLE_FILE_VALIDATION=1
+      - DEBUGPY_PORT=${DEBUGPY_PORT}
+    volumes:
+      - ./bot/migrations:/livent_bot/migrations
