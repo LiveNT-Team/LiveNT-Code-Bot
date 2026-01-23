@@ -6,4 +6,4 @@ def split_into_chunks(text: str, chunk_size: int = 1900) -> Generator[str]:
         yield text[i : i + chunk_size]
 
 
-__all__ = ("reply_long_message",)
+__all__ = ("split_into_chunks",)

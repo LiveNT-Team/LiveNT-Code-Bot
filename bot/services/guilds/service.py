@@ -20,6 +20,8 @@ async def get_guild(db: MySqliUp, gid: int) -> Guild | None:
             "minor_moder_role_id",
             "greetings_enabled",
             "greetings_channel_id",
+            "ai_chat_enabled",
+            "ai_channel_id",
         ],
         where="discord_gid = %s",
         params=(gid,),
