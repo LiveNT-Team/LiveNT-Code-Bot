@@ -15,6 +15,12 @@ async def get_user(
             "discord_gid",
             "discord_uid",
             "ai_per_name",
+            "banned",
+            "ban_expires_at",
+            "ban_reason",
+            "muted",
+            "mut_expires_at",
+            "mut_reason",
         ],
         where="discord_gid = %s AND discord_uid = %s",
         params=(

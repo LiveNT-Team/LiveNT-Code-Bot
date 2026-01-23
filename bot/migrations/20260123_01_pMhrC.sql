@@ -1,0 +1,16 @@
+-- 
+-- depends: 20260122_01_1mPvH
+
+ALTER TABLE users
+ADD COLUMN banned BOOLEAN DEFAULT false,
+ADD COLUMN ban_expires_at DATETIME NOT NULL,
+ADD COLUMN ban_reason VARCHAR(48) NULL,
+ADD COLUMN muted BOOLEAN DEFAULT false,
+ADD COLUMN mut_expires_at DATETIME NOT NULL,
+ADD COLUMN mut_reason VARCHAR(48) NULL;
+
+ALTER TABLE guilds
+ADD COLUMN mut_role_id BIGINT NULL,
+ADD COLUMN ban_role_id BIGINT NULL,
+ADD COLUMN muting_enabled BIGINT NULL,
+ADD COLUMN banning_enabled BIGINT NULL;
