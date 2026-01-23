@@ -28,6 +28,9 @@ class EventsHandlerCog(Cog):
     async def on_message(self, message: Message) -> None:
         if message.author.bot or not message.guild:
             return
+        member = message.author if isinstance(message.author, Member) else None
+        if not member:
+            return
         db = MySqliUp()
         await db.connect()
         await db.begin()
@@ -35,23 +38,32 @@ class EventsHandlerCog(Cog):
             new_count = await increment_messages_count(
                 db,
                 message.guild.id,
-                message.author.id,
+                member.id,
             )
             guild = await get_or_create_guild(db, message.guild.id)
             await db.commit()
-            if (
-                guild["activist_enabled"]
-                and guild["activist_role_id"]
-                and guild["activist_messages_count"]
-                and new_count >= guild["activist_messages_count"]
-            ):
-                role = message.guild.get_role(guild["activist_role_id"])
-                if role and role not in message.author.roles:
-                    await message.author.add_roles(role)
-        except Exception:
+        except Exception as e:
             await db.rollback()
+            logger.error(f"Error in on_message: {e}")
+            return
         finally:
             await db.close()
+        if (
+            guild["activist_enabled"]
+            and guild["activist_role_id"]
+            and guild["activist_messages_count"]
+            and new_count >= guild["activist_messages_count"]
+        ):
+            role = message.guild.get_role(guild["activist_role_id"])
+            if role and role not in member.roles:
+                try:
+                    await member.add_roles(role)
+                    embed = InfoEmbed()
+                    embed.title = "Новый активист!"
+                    embed.description = f"{member.mention} получил роль {role.mention} за {new_count} сообщений!"
+                    await message.channel.send(embed=embed)
+                except Exception as e:
+                    logger.error(f"Error adding activist role: {e}")
 
     @slash_command(description="Посмотреть количество отправленных сообщений")
     async def stats(
