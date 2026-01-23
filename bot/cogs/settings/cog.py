@@ -103,6 +103,7 @@ class SettingsCog(Cog):
         settings_embed.add_field(
             "Приветствия",
             "Включены" if guild["greetings_enabled"] else "Выключены",
+            inline=True,
         )
         settings_embed.add_field(
             "Канал приветствий",
@@ -111,10 +112,12 @@ class SettingsCog(Cog):
                 if guild["greetings_channel_id"]
                 else "Не задан"
             ),
+            inline=True,
         )
         settings_embed.add_field(
             "Система активиста",
             "Включена" if guild["activist_enabled"] else "Выключена",
+            inline=True,
         )
         settings_embed.add_field(
             "Роль активиста",
@@ -123,6 +126,7 @@ class SettingsCog(Cog):
                 if guild["activist_role_id"]
                 else "Не задана"
             ),
+            inline=True,
         )
         settings_embed.add_field(
             "Сообщений для активиста",
@@ -131,6 +135,17 @@ class SettingsCog(Cog):
                 if guild["activist_messages_count"]
                 else "Не задано"
             ),
+            inline=True,
+        )
+        settings_embed.add_field(
+            "Канал с ИИ",
+            (f"<#{guild['ai_channel_id']}>" if guild["ai_channel_id"] else "Не задан"),
+            inline=True,
+        )
+        settings_embed.add_field(
+            "Чат с ИИ",
+            "Включен" if guild["ai_chat_enabled"] else "Выключен",
+            inline=True,
         )
         await inter.response.send_message(embed=settings_embed, ephemeral=True)
 
