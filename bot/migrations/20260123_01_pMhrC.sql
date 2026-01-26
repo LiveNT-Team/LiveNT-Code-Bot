@@ -3,10 +3,13 @@
 
 CREATE TABLE bans (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    user_id BIGINT UNSIGNED NOT NULL,
+    discord_uid BIGINT UNSIGNED UNIQUE NOT NULL,
+    discord_gid BIGINT UNSIGNED UNIQUE NOT NULL,
     expires_at DATETIME NOT NULL,
     reason VARCHAR(64) DEFAULT "",
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    FOREIGN KEY discord_uid REFERENCES users(discord_uid),
+    FOREIGN KEY discord_gid REFERENCES users(discord_gid),
+    CONSTRAINT uc_bans_gid_uid UNIQUE (discord_uid, discord_gid)
 );
 
 ALTER TABLE guilds
