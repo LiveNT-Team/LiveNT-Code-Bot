@@ -8,6 +8,7 @@ from cogs.administrators.cog import AdministratorsCog
 from cogs.events_handler.cog import EventsHandlerCog
 from cogs.greetings.cog import GreetingsCog
 from cogs.ai_chat.cog import AIChat
+from cogs.help.cog import HelpCog
 
 bot = InteractionBot(
     intents=Intents(
@@ -31,6 +32,7 @@ bot = InteractionBot(
         AdministratorsCog(),
         GreetingsCog(),
         AIChat(bot=bot),
+        HelpCog(bot=bot),
     }
 ]
 
