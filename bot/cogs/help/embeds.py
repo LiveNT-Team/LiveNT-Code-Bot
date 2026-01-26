@@ -1,5 +1,5 @@
-from bot.core.base_embeds import InfoEmbed
-from bot.cogs.help.enums import HelpMenuSectionsEnum
+from core.base_embeds import InfoEmbed
+from .enums import HelpMenuSectionsEnum
 
 
 class HelpForSectionEmbed(InfoEmbed):

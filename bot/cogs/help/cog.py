@@ -1,7 +1,7 @@
 from disnake import AppCmdInter
 from disnake.ext.commands import Cog, slash_command
-from bot.core.base_embeds import InfoEmbed
-from bot.cogs.help.views import HelpView
+from core.base_embeds import InfoEmbed
+from .views import HelpView
 
 
 class HelpCog(Cog):

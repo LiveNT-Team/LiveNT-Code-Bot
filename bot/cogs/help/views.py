@@ -1,7 +1,7 @@
 from disnake import MessageInteraction, SelectOption
 from disnake.ui import Select, View, select
-from bot.cogs.help.enums import HelpMenuSectionsEnum
-from bot.cogs.help.embeds import HelpForSectionEmbed
+from .enums import HelpMenuSectionsEnum
+from .embeds import HelpForSectionEmbed
 
 
 class HelpView(View):
