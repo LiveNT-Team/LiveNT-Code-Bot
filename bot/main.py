@@ -33,10 +33,9 @@ bot = InteractionBot(
         AdministratorsCog(),
         GreetingsCog(),
         AIChat(bot=bot),
-        BansCog(),
-        MutsCog(),
+        BansCog(bot=bot),
+        MutsCog(bot=bot),
     }
 ]
-
 
 bot.run(BOT_TOKEN)

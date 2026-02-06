@@ -14,8 +14,8 @@ async def set_special_role(role: Role | None, field_name: str, gid: int) -> None
     await get_or_create_guild(db, gid)
     await set_guild_setting(
         db,
-        field_name,
-        role.id if role else None,
+        name=field_name,
+        value=role.id if role else None,
         gid=gid,
     )
     await db.commit()

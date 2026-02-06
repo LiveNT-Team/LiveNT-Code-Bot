@@ -5,7 +5,7 @@ from core.models.ban import Ban
 from services.mysqliup import MySqliUp
 
 
-async def ban_user(
+async def mute_user(
     db: MySqliUp,
     gid: int,
     uid: int,
@@ -15,7 +15,7 @@ async def ban_user(
 ) -> None:
     try:
         await db.create_row(
-            "bans",
+            "muts",
             {
                 "discord_admin_id": discord_admin_id,
                 "discord_uid": uid,
@@ -26,7 +26,7 @@ async def ban_user(
         )
     except IntegrityError:
         await db.update_row(
-            "bans",
+            "muts",
             {
                 "discord_admin_id": discord_admin_id,
                 "expires_at": datetime.now() + duration,
@@ -39,13 +39,13 @@ async def ban_user(
         await db.commit()
 
 
-async def unban_user(
+async def unmute_user(
     db: MySqliUp,
     gid: int,
     uid: int,
 ) -> None:
     await db.delete_row(
-        "bans",
+        "muts",
         where="discord_uid = %s AND discord_gid = %s",
         params=(
             uid,
@@ -55,7 +55,7 @@ async def unban_user(
     await db.commit()
 
 
-async def get_bans_per_day_count(db: MySqliUp, discord_admin_id: int) -> int:
+async def get_muts_per_day_count(db: MySqliUp, discord_admin_id: int) -> int:
     now = datetime.now()
     day_beginning = datetime(
         year=now.year,
@@ -74,7 +74,7 @@ async def get_bans_per_day_count(db: MySqliUp, discord_admin_id: int) -> int:
         hour=23,
     )
     return await db.select_count_all_row(
-        "bans",
+        "muts",
         where="discord_admin_id = %s AND created_at >= %s AND created_at <= %s",
         params=(
             discord_admin_id,
@@ -84,9 +84,9 @@ async def get_bans_per_day_count(db: MySqliUp, discord_admin_id: int) -> int:
     )
 
 
-async def get_expired_bans(db: MySqliUp, gid: int) -> list[Ban]:
+async def get_expired_muts(db: MySqliUp, gid: int) -> list[Ban]:
     return await db.select_rows(
-        "bans",
+        "muts",
         (
             "id",
             "discord_admin_id",
@@ -104,9 +104,9 @@ async def get_expired_bans(db: MySqliUp, gid: int) -> list[Ban]:
     )
 
 
-async def get_ban_info(db: MySqliUp, uid: int, gid: int) -> Ban | None:
+async def get_mut_info(db: MySqliUp, uid: int, gid: int) -> Ban | None:
     return await db.select_row(
-        "bans",
+        "muts",
         (
             "id",
             "discord_admin_id",

@@ -19,3 +19,5 @@ class Guild(TypedDict):
     ai_channel_id: int
     ban_role_id: int
     banning_enabled: bool
+    mut_role_id: int
+    muting_enabled: bool

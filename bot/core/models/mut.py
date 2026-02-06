@@ -2,7 +2,7 @@ import datetime
 from typing import TypedDict
 
 
-class Ban(TypedDict):
+class Mut(TypedDict):
     id: int
     discord_admin_id: int
     discord_uid: int
