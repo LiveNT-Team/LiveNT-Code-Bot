@@ -73,11 +73,11 @@ PERSONALITIES: dict[str, Personality] = {
 }
 """Информация о личностях ИИ"""
 
-DEFAULT_BAN_DURATION = timedelta(seconds=10)
+DEFAULT_BAN_DURATION = timedelta(weeks=1)
 """Значение для длительности бана по умолчанию"""
 
 DEFAULT_MUT_DURATION = timedelta(hours=1)
 """Значение для длительности мута по умолчанию"""
 
-CHECK_FOR_BANS_EXPIRATIONS_DELAY = timedelta(seconds=5)
-CHECK_FOR_MUTS_EXPIRATIONS_DELAY = timedelta(seconds=5)
+CHECK_FOR_BANS_EXPIRATIONS_DELAY = timedelta(minutes=10)
+CHECK_FOR_MUTS_EXPIRATIONS_DELAY = timedelta(minutes=1)
