@@ -1,5 +1,5 @@
 --
--- depends: 20260118_01_pscu9
+-- depends: 20260202_01_kgYep
 
 ALTER TABLE users
 ADD COLUMN messages_count INT UNSIGNED DEFAULT 0;
