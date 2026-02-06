@@ -4,6 +4,7 @@ The bot configuration
 You can find full configuration documentation at `./bot/docs/project_configuration.md.`
 """
 
+from datetime import timedelta
 import logging
 from os import getenv
 from typing import Literal
@@ -71,3 +72,12 @@ PERSONALITIES: dict[str, Personality] = {
     ),
 }
 """Информация о личностях ИИ"""
+
+DEFAULT_BAN_DURATION = timedelta(seconds=10)
+"""Значение для длительности бана по умолчанию"""
+
+DEFAULT_MUT_DURATION = timedelta(hours=1)
+"""Значение для длительности мута по умолчанию"""
+
+CHECK_FOR_BANS_EXPIRATIONS_DELAY = timedelta(seconds=5)
+CHECK_FOR_MUTS_EXPIRATIONS_DELAY = timedelta(seconds=5)

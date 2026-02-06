@@ -7,7 +7,7 @@ from core.configuration import (
     MYSQL_DATABASE,
     MYSQL_PORT,
 )
-from typing import Optional, Union, List, Dict, Any
+from typing import Optional, List, Dict, Any
 
 
 class MySqliUp:
@@ -50,25 +50,30 @@ class MySqliUp:
             self.pool.close()
             await self.pool.wait_closed()
 
-    async def _execute(
-        self, query: str, params: tuple = (), conn=None, cursor=None, fetch: str = None
-    ):
+    async def _execute(self, query: str, params: tuple = (), conn=None, cursor=None):
         if conn is None or cursor is None:
             async with self.pool.acquire() as conn:
                 async with conn.cursor(aiomysql.DictCursor) as cursor:
                     await cursor.execute(query, params)
-
-                    if fetch == "one":
-                        result = await cursor.fetchone()
-                    elif fetch == "all":
-                        result = await cursor.fetchall()
-                    else:
-                        result = None
-
                     await conn.commit()
-                    return result
         else:
             await cursor.execute(query, params)
+
+    async def _query_fetch_one(self, query: str, params: tuple = ()):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(query, params)
+                result = await cursor.fetchone()
+                await conn.commit()
+                return result
+
+    async def _query_fetch_all(self, query: str, params: tuple = ()):
+        async with self.pool.acquire() as conn:
+            async with conn.cursor(aiomysql.DictCursor) as cursor:
+                await cursor.execute(query, params)
+                result = await cursor.fetchall()
+                await conn.commit()
+                return result
 
     def _validate_identifier(self, identifier: str) -> str:
         if re.match(r"^[a-zA-Z0-9_]+$", identifier):
@@ -148,12 +153,12 @@ class MySqliUp:
 
     async def select_all_row(
         self, table: str, where: Optional[str] = None, params: tuple = ()
-    ) -> Union[Dict, bool]:
+    ) -> Optional[Dict[str, Any]]:
         table = self._validate_identifier(table)
         sql = f"SELECT * FROM `{table}`"
         if where:
             sql += f" WHERE {where}"
-        return await self._execute(sql, params, fetch="one")
+        return await self._query_fetch_one(sql, params)
 
     async def select_row(
         self,
@@ -161,45 +166,57 @@ class MySqliUp:
         columns: List[str],
         where: Optional[str] = None,
         params: tuple = (),
-    ) -> Union[Dict, bool]:
+    ) -> Optional[Dict[str, Any]]:
         table = self._validate_identifier(table)
         validated_columns = [self._validate_identifier(col) for col in columns]
         columns_sql = ", ".join([f"`{col}`" for col in validated_columns])
-
         sql = f"SELECT {columns_sql} FROM `{table}`"
         if where:
             sql += f" WHERE {where}"
-        return await self._execute(sql, params, fetch="one")
+        return await self._query_fetch_one(sql, params)
+
+    async def select_rows(
+        self,
+        table: str,
+        columns: List[str],
+        where: Optional[str] = None,
+        params: tuple = (),
+    ) -> List[Dict[str, Any]]:
+        table = self._validate_identifier(table)
+        validated_columns = [self._validate_identifier(col) for col in columns]
+        columns_sql = ", ".join([f"`{col}`" for col in validated_columns])
+        sql = f"SELECT {columns_sql} FROM `{table}`"
+        if where:
+            sql += f" WHERE {where}"
+        return await self._query_fetch_all(sql, params)
 
     async def select_count_all_row(
         self,
         table: str,
-        as_dict: bool = True,
         where: Optional[str] = None,
         params: tuple = (),
-    ) -> Any:
+    ) -> int:
         table = self._validate_identifier(table)
-        alias = " as count" if as_dict else ""
-        sql = f"SELECT COUNT(*){alias} FROM `{table}`"
+        sql = f"SELECT COUNT(*) as count FROM `{table}`"
         if where:
             sql += f" WHERE {where}"
-        return await self._execute(sql, params, fetch="one")
+        result = await self._query_fetch_one(sql, params)
+        return result["count"]
 
     async def select_count_row(
         self,
         table: str,
         column: str,
-        as_dict: bool = True,
         where: Optional[str] = None,
         params: tuple = (),
-    ) -> Any:
+    ) -> int:
         table = self._validate_identifier(table)
         column = self._validate_identifier(column)
-        alias = " as count" if as_dict else ""
-        sql = f"SELECT COUNT(DISTINCT `{column}`){alias} FROM `{table}`"
+        sql = f"SELECT COUNT(DISTINCT `{column}`) as count FROM `{table}`"
         if where:
             sql += f" WHERE {where}"
-        return await self._execute(sql, params, fetch="one")
+        result = await self._query_fetch_one(sql, params)
+        return result["count"]
 
     async def select_all_array(
         self, table: str, column: str, where: Optional[str] = None, params: tuple = ()
@@ -209,22 +226,20 @@ class MySqliUp:
         sql = f"SELECT `{column}` FROM `{table}`"
         if where:
             sql += f" WHERE {where}"
-        results = await self._execute(sql, params, "all")
-        return [row[column] for row in results]
+        results = await self._query_fetch_all(sql, params)
+        return [list(row.values())[0] for row in results] if results else []
 
     async def select_order_row(
         self, table: str, columns: List[str], order_by: str, order_dir: str = "ASC"
-    ) -> Union[Dict, bool]:
+    ) -> Optional[Dict[str, Any]]:
         table = self._validate_identifier(table)
         validated_columns = [self._validate_identifier(col) for col in columns]
         order_column = self._validate_identifier(order_by)
 
         if order_dir.upper() in ("ASC", "DESC"):
             columns_sql = ", ".join([f"`{col}`" for col in validated_columns])
-            return await self._execute(
-                f"SELECT {columns_sql} FROM `{table}` ORDER BY `{order_column}` {order_dir.upper()}",
-                (),
-                fetch="one",
+            return await self._query_fetch_one(
+                f"SELECT {columns_sql} FROM `{table}` ORDER BY `{order_column}` {order_dir.upper()}"
             )
 
     async def close(self) -> None:

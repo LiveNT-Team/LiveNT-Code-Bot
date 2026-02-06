@@ -101,6 +101,26 @@ class SettingsCog(Cog):
             inline=False,
         )
         settings_embed.add_field(
+            "Бан роль",
+            (f"<@&{guild["ban_role_id"]}>" if guild["ban_role_id"] else "Не задана"),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Использовать бан по роли",
+            "Да" if guild["banning_enabled"] else "Нет",
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Мьют роль",
+            (f"<@&{guild["mut_role_id"]}>" if guild["mut_role_id"] else "Не задана"),
+            inline=False,
+        )
+        settings_embed.add_field(
+            "Использовать мьют по роли",
+            "Да" if guild["muting_enabled"] else "Нет",
+            inline=False,
+        )
+        settings_embed.add_field(
             "Приветствия",
             "Включены" if guild["greetings_enabled"] else "Выключены",
             inline=True,
