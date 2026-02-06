@@ -7,7 +7,7 @@ fi
 if [ $DEBUG -eq 1 ]; then
     echo Starting in debug mode
     echo Debugpy will listen on $DEBUGPY_PORT
-    python -m debugpy --listen 0.0.0.0:$DEBUGPY_PORT --wait-for-client ./main.py
+    python -m debugpy --listen 0.0.0.0:$DEBUGPY_PORT ./main.py
 fi
 
 exec "$@"
