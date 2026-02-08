@@ -1,7 +1,7 @@
 from datetime import timedelta, datetime
 from pymysql.err import IntegrityError
 
-from core.models.ban import Ban
+from core.models.mut import Mut
 from services.mysqliup import MySqliUp
 
 
@@ -84,7 +84,7 @@ async def get_muts_per_day_count(db: MySqliUp, discord_admin_id: int) -> int:
     )
 
 
-async def get_expired_muts(db: MySqliUp, gid: int) -> list[Ban]:
+async def get_expired_muts(db: MySqliUp, gid: int) -> list[Mut]:
     return await db.select_rows(
         "muts",
         (
@@ -104,7 +104,7 @@ async def get_expired_muts(db: MySqliUp, gid: int) -> list[Ban]:
     )
 
 
-async def get_mut_info(db: MySqliUp, uid: int, gid: int) -> Ban | None:
+async def get_mut_info(db: MySqliUp, uid: int, gid: int) -> Mut | None:
     return await db.select_row(
         "muts",
         (

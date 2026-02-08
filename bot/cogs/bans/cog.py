@@ -326,7 +326,7 @@ class BansCog(Cog):
                 if admin_guild_permissions:
                     if (
                         admin_guild_permissions["priority"]
-                        > author_guild_permissions["priority"]
+                        >= author_guild_permissions["priority"]
                     ):
                         return await inter.response.send_message(
                             embed=ErrorEmbed(

@@ -185,7 +185,7 @@ class MutsCog(Cog):
             guild = await get_or_create_guild(db, inter.guild_id)
             if not guild["muting_enabled"]:
                 return await inter.response.send_message(
-                    embed=ErrorEmbed(description="Муты отключены на этом сервере")
+                    embed=ErrorEmbed(description="Мьюты отключены на этом сервере")
                 )
             await get_or_create_user(db, inter.guild_id, inter.author.id)
             await get_or_create_user(db, inter.guild_id, member.id)
@@ -203,7 +203,7 @@ class MutsCog(Cog):
                 if author_permissions["priority"] <= member_permissions["priority"]:
                     return await inter.response.send_message(
                         embed=ErrorEmbed(
-                            description=f"У вас недостаточно прав, чтобы замутить {member.mention}"
+                            description=f"У вас недостаточно прав, чтобы замьютить {member.mention}"
                         )
                     )
             # Выполняем проверку на превышение максимальной длительности мьюта, количества мьютов выданных сегодня, и саму возможность мьютить
@@ -324,7 +324,7 @@ class MutsCog(Cog):
                 if admin_guild_permissions:
                     if (
                         admin_guild_permissions["priority"]
-                        > author_guild_permissions["priority"]
+                        >= author_guild_permissions["priority"]
                     ):
                         return await inter.response.send_message(
                             embed=ErrorEmbed(
