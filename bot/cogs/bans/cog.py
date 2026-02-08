@@ -189,47 +189,62 @@ class BansCog(Cog):
                 return await inter.response.send_message(
                     embed=ErrorEmbed(description="Баны отключены на этом сервере")
                 )
-            await get_or_create_user(db, inter.guild_id, inter.author.id)
-            await get_or_create_user(db, inter.guild_id, member.id)
-            author_permissions = await get_member_permissions(
-                guild,
-                inter.guild,
-                inter.author,
-            )
-            if isinstance(member, Member):
-                member_permissions = await get_member_permissions(
+            if inter.author.guild_permissions.administrator:
+                if member.guild_permissions.administrator:
+                    if not inter.guild.owner_id == inter.author.id:
+                        return await inter.response.send_message(
+                            embed=ErrorEmbed(
+                                description=f"У вас недостаточно прав, чтобы забанить {member.mention}"
+                            )
+                        )
+            elif member.guild_permissions.administrator:
+                return await inter.response.send_message(
+                    embed=ErrorEmbed(
+                        description=f"У вас недостаточно прав, чтобы забанить {member.mention}"
+                    )
+                )
+            else:
+                await get_or_create_user(db, inter.guild_id, inter.author.id)
+                await get_or_create_user(db, inter.guild_id, member.id)
+                author_permissions = await get_member_permissions(
                     guild,
                     inter.guild,
-                    member,
+                    inter.author,
                 )
-                if author_permissions["priority"] <= member_permissions["priority"]:
-                    return await inter.response.send_message(
-                        embed=ErrorEmbed(
-                            description=f"У вас недостаточно прав, чтобы забанить {member.mention}"
-                        )
+                if isinstance(member, Member):
+                    member_permissions = await get_member_permissions(
+                        guild,
+                        inter.guild,
+                        member,
                     )
-            # Выполняем проверку на превышение максимальной длительности бана, количества банов выданных сегодня, и саму возможность банить
-            if not author_permissions["ban_members"]:
-                return await inter.response.send_message(
-                    embed=NotEnoughPermissionsEmbed()
-                )
-            if not author_permissions["max_ban_duration"] is unlimited:
-                if duration > author_permissions["max_ban_duration"]:
-                    return await inter.response.send_message(
-                        embed=ErrorEmbed(
-                            description=f"Вы превысили максимальную продолжительность бана для своей роли. Максимальная продолжительность: {author_permissions["max_ban_duration"]}"
+                    if author_permissions["priority"] <= member_permissions["priority"]:
+                        return await inter.response.send_message(
+                            embed=ErrorEmbed(
+                                description=f"У вас недостаточно прав, чтобы забанить {member.mention}"
+                            )
                         )
-                    )
-            if not author_permissions["max_bans_per_day"] is unlimited:
-                if (
-                    await get_bans_per_day_count(db, inter.author.id)
-                    >= author_permissions["max_bans_per_day"]
-                ):
+                # Выполняем проверку на превышение максимальной длительности бана, количества банов выданных сегодня, и саму возможность банить
+                if not author_permissions["ban_members"]:
                     return await inter.response.send_message(
-                        embed=ErrorEmbed(
-                            description=f"Вы достигли лимита по количеству банов на сегодня. Максимальное количество банов в день для вашей роли: {author_permissions['max_bans_per_day']}"
-                        )
+                        embed=NotEnoughPermissionsEmbed()
                     )
+                if not author_permissions["max_ban_duration"] is unlimited:
+                    if duration > author_permissions["max_ban_duration"]:
+                        return await inter.response.send_message(
+                            embed=ErrorEmbed(
+                                description=f"Вы превысили максимальную продолжительность бана для своей роли. Максимальная продолжительность: {author_permissions["max_ban_duration"]}"
+                            )
+                        )
+                if not author_permissions["max_bans_per_day"] is unlimited:
+                    if (
+                        await get_bans_per_day_count(db, inter.author.id)
+                        >= author_permissions["max_bans_per_day"]
+                    ):
+                        return await inter.response.send_message(
+                            embed=ErrorEmbed(
+                                description=f"Вы достигли лимита по количеству банов на сегодня. Максимальное количество банов в день для вашей роли: {author_permissions['max_bans_per_day']}"
+                            )
+                        )
             # Получаем бан-роль, если бан роль не определена, предложить создать, если автором является пользователь с ролью разработчик или пользователь с правами администратора
             ban_role = inter.guild.get_role(guild["ban_role_id"])
             if not ban_role:
@@ -289,50 +304,51 @@ class BansCog(Cog):
                 return await inter.response.send_message(
                     embed=ErrorEmbed(description="Баны отключены на этом сервере")
                 )
-            author_guild_permissions = await get_member_permissions(
-                guild_obj=guild,
-                discord_guild=inter.guild,
-                member=inter.author,
-            )
-            if not author_guild_permissions:
-                return await inter.response.send_message(
-                    embed=ErrorEmbed(
-                        description="У вас недостаточно прав, чтобы разбанить этого участника"
-                    )
-                )
-            ban_info = await get_ban_info(
-                db,
-                gid=inter.guild_id,
-                uid=member.id,
-            )
-            if not ban_info:
-                return await inter.response.send_message(
-                    embed=ErrorEmbed(description="Этот участник не забанен")
-                )
-
-            if not author_guild_permissions["unban_members"]:
-                return await inter.response.send_message(
-                    embed=ErrorEmbed(
-                        description="У вас недостаточно прав чтобы разбанить этого участника"
-                    )
-                )
-            admin = inter.guild.get_member(ban_info["discord_admin_id"])
-            if admin:
-                admin_guild_permissions = await get_member_permissions(
+            if not inter.author.guild_permissions.administrator:
+                author_guild_permissions = await get_member_permissions(
                     guild_obj=guild,
                     discord_guild=inter.guild,
-                    member=admin,
+                    member=inter.author,
                 )
-                if admin_guild_permissions:
-                    if (
-                        admin_guild_permissions["priority"]
-                        >= author_guild_permissions["priority"]
-                    ):
-                        return await inter.response.send_message(
-                            embed=ErrorEmbed(
-                                description="Вы не можете разбанить этого участника, так как он был забанен администратором с более высоким приоритетом"
-                            )
+                if not author_guild_permissions:
+                    return await inter.response.send_message(
+                        embed=ErrorEmbed(
+                            description="У вас недостаточно прав, чтобы разбанить этого участника"
                         )
+                    )
+                ban_info = await get_ban_info(
+                    db,
+                    gid=inter.guild_id,
+                    uid=member.id,
+                )
+                if not ban_info:
+                    return await inter.response.send_message(
+                        embed=ErrorEmbed(description="Этот участник не забанен")
+                    )
+
+                if not author_guild_permissions["unban_members"]:
+                    return await inter.response.send_message(
+                        embed=ErrorEmbed(
+                            description="У вас недостаточно прав чтобы разбанить этого участника"
+                        )
+                    )
+                admin = inter.guild.get_member(ban_info["discord_admin_id"])
+                if admin:
+                    admin_guild_permissions = await get_member_permissions(
+                        guild_obj=guild,
+                        discord_guild=inter.guild,
+                        member=admin,
+                    )
+                    if admin_guild_permissions:
+                        if (
+                            admin_guild_permissions["priority"]
+                            >= author_guild_permissions["priority"]
+                        ):
+                            return await inter.response.send_message(
+                                embed=ErrorEmbed(
+                                    description="Вы не можете разбанить этого участника, так как он был забанен администратором с более высоким приоритетом"
+                                )
+                            )
             if isinstance(member, Member):
                 ban_role = inter.guild.get_role(guild["ban_role_id"])
                 if not ban_role:
